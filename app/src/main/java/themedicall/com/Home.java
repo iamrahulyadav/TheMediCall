@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -141,6 +142,7 @@ public class Home extends NavigationDrawer implements
     ArrayList<CitiesGetterSetter> tempCityList;
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    //MyReceiverForNetworkDialogHidShow myReceiver;
     MyReceiverForNetworkDialog myReceiver;
     int radioSelectedId ;
     RadioButton radioButton;
@@ -163,6 +165,8 @@ public class Home extends NavigationDrawer implements
     ProgressBar advanceSearchBar;
     SharedPreferences sharedPreferencesCity ;
 
+    Dialog networkDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,9 +188,13 @@ public class Home extends NavigationDrawer implements
         googleApiClientCode();
         SelectCity();
         clickListener();
-        //callingHospitalListservice();
+
         setImageInActionbar();
         openSearchViewDialog();
+
+
+
+        //callingHospitalListservice();
 
     }
 
@@ -203,8 +211,6 @@ public class Home extends NavigationDrawer implements
             Toast.makeText(this, "Not Connected!", Toast.LENGTH_SHORT).show();
 
     }
-
-
 
 
     public void initiate() {
@@ -255,6 +261,8 @@ public class Home extends NavigationDrawer implements
         progressDialog.setIndeterminate(true);
 
 
+
+        networkDialog = new Dialog(Home.this);
 
     }
 
@@ -852,6 +860,7 @@ public class Home extends NavigationDrawer implements
             mGoogleApiClient.connect();
         }
 
+        //myReceiver = new MyReceiverForNetworkDialogHidShow();
         myReceiver = new MyReceiverForNetworkDialog();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Glob.MY_ACTION);
@@ -1555,8 +1564,11 @@ public class Home extends NavigationDrawer implements
                 Log.e("TAg", "the Profile Image is url is: " + PROFILE_IMAGE_URL);
 
 
-                Picasso.with(this).load(PROFILE_IMAGE_URL).placeholder(R.drawable.loginuser).transform(new CircleTransformPicasso()).into(userIcon);
-
+                if (profile_img.contains("facebook") || profile_img.contains("google")){
+                    Picasso.with(this).load(profile_img).placeholder(R.drawable.loginuser).transform(new CircleTransformPicasso()).into(userIcon);
+                }else {
+                    Picasso.with(this).load(PROFILE_IMAGE_URL).placeholder(R.drawable.loginuser).transform(new CircleTransformPicasso()).into(userIcon);
+                }
                 userIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1676,5 +1688,52 @@ public class Home extends NavigationDrawer implements
         mHandler = new Handler();
         mHandler.postDelayed(mRunnableStartMainActivity, 1000);
 
+    }
+
+
+    public class MyReceiverForNetworkDialogHidShow extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            // TODO Auto-generated method stub
+
+            int datapassed = intent.getIntExtra("DATAPASSED", 0);
+
+
+            networkDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            networkDialog.setContentView(R.layout.internet_connection_dialog);
+            networkDialog.setCancelable(false);
+
+            if (datapassed == 1234){
+
+                TextView enable = (TextView) networkDialog.findViewById(R.id.enable);
+                TextView exit = (TextView) networkDialog.findViewById(R.id.exit);
+                networkDialog.show();
+
+                enable.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                        context.startActivity(i);
+                    }
+                });
+
+
+                exit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        System.exit(0);
+                    }
+                });
+
+            }
+
+            if(datapassed == 12345)
+            {
+                Log.e("tag", "data passed form check connectivity : "+datapassed);
+                networkDialog.cancel();
+            }
+
+        }
     }
 }

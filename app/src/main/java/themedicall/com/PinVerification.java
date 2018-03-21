@@ -1,6 +1,9 @@
 package themedicall.com;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -51,6 +55,13 @@ public class PinVerification extends AppCompatActivity {
     private static final String TAG = "PinVerification";
     ProgressDialog progressDialog;
 
+
+    String mProfileImage=null;
+    String mClaimeeID = "";
+    String mClaimeeName = "";
+    String mFrome = "";
+    CustomProgressDialog mClaimDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +96,11 @@ public class PinVerification extends AppCompatActivity {
             mCode = getingData.getExtras().getString("code");
             mUserID = getingData.getExtras().getString("user_id");
             signUpPosition = getingData.getExtras().getInt("signupposition");
+            mClaimeeID = getingData.getStringExtra("claimee_id");
+            mClaimeeName = getingData.getStringExtra("claimee_name");
+            mFrome = getingData.getStringExtra("from");
+
+            Log.e("TAG", "the from text is aa: "+ mFrome);
 
             if (mCode.equals("00")){//00 for taging for verifying already register user
                 resendCodeServiceCall();
@@ -95,6 +111,21 @@ public class PinVerification extends AppCompatActivity {
         SharedPreferences.Editor editor = prefPinTagPresist.edit();
         editor.putInt("value", 101);
         editor.commit();
+
+
+
+        //share preff for login With facebbok
+        SharedPreferences sharedPreferences = getSharedPreferences("usercrad", 0);
+        if (sharedPreferences!=null) {
+
+
+            String pImage = sharedPreferences.getString("profile_img", null);
+            Log.e("TAG", "user profile image of share itent : " + pImage);
+
+            if (pImage!=null){
+                mProfileImage = pImage;
+            }
+        }
 
     }
 
@@ -147,12 +178,12 @@ public class PinVerification extends AppCompatActivity {
                         rl_et_pin.setVisibility(View.GONE);
                         //bt_verify_now.setVisibility(View.GONE);
 
-                        String user_id = jObj.getString("user_id");
+                       final String user_id = jObj.getString("user_id");
                         String user_name = jObj.getString("user_name");
-                        String user_table = jObj.getString("user_table");
+                       final String user_table = jObj.getString("user_table");
                         String user_email = jObj.getString("user_email");
                         String user_phone = jObj.getString("user_phone");
-                        String full_name = jObj.getString("full_name");
+                       final String full_name = jObj.getString("full_name");
                         String id = jObj.getString("id");
                         String verified_status = jObj.getString("verified_status");
                         String profile_img = jObj.getString("profile_img");
@@ -175,7 +206,11 @@ public class PinVerification extends AppCompatActivity {
                         editor.putString("userfullname", full_name);
                         editor.putString("myid", id);
                         editor.putString("verified_status", verified_status);
-                        editor.putString("profile_img", profile_img);
+                        if (mProfileImage!=null){
+                            editor.putString("profile_img", mProfileImage);
+                        }else {
+                            editor.putString("profile_img", profile_img);
+                        }
                         editor.putString("sigupposition", Integer.toString(signUpPosition));
                         editor.commit();
 
@@ -185,18 +220,115 @@ public class PinVerification extends AppCompatActivity {
                             onClickVerifyLater();
                             onClickUpdateProfileClick();
 
+                            if (user_table.equals("doctors")) {
+                                if (mClaimeeID.length()>2) {
+
+                                    if (mFrome.equals("claim")) {
+                                        Log.e("TAG", "here the id for claimmee: " + mClaimeeID);
+                                        Log.e("TAG", "here the id for claimmer: " + id);
+                                        Log.e("TAG", "here the id for claimmee name: " + mClaimeeName);
+
+                                        //calling claim api
+                                        cliamProfileSendingDataService(id, mClaimeeID, full_name, mClaimeeName);
+
+                                    }
+
+                                    else if (mFrome.equals("report")){
+
+                                        final Dialog reportDialog = new Dialog(PinVerification.this);
+                                        reportDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        reportDialog.setContentView(R.layout.custome_dialog_doctor_report);
+                                        TextView tv_dialog_title = (TextView) reportDialog.findViewById(R.id.tv_dialog_title);
+                                        final EditText et_dialog_report = (EditText) reportDialog.findViewById(R.id.et_dialog_report);
+                                        Button bt_dialog_submit_report = (Button) reportDialog.findViewById(R.id.bt_dialog_submit_report);
+
+
+                                        //submit button click listener
+                                        bt_dialog_submit_report.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                String reportText = et_dialog_report.getText().toString();
+                                                if (reportText.length()==0){
+                                                    et_dialog_report.setError("Should not be Empty");
+
+                                                }else
+                                                {
+                                                    reportDialog.dismiss();
+                                                    Log.e("TAG","The report Text is: " + reportText);
+                                                    //calling report api
+                                                    reportProfileSendingDataService(user_id, mClaimeeID, reportText, full_name, mClaimeeName);
+
+                                                }
+
+                                            }
+                                        });
+
+
+                                        reportDialog.setCancelable(false);
+                                        reportDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationTooDouen;
+                                        reportDialog.show();
+                                    }
+
+                                }
+                                else {
+
+                                }
+                            }
+
                             Log.e("TAG", "the selected user position is: " + signUpPosition);
 
                         }
                         else {
 
 
-                            finish();
+                                //other user report herer
+                                if (mFrome.equals("report")) {
+                                    final Dialog reportDialog = new Dialog(PinVerification.this);
+                                    reportDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    reportDialog.setContentView(R.layout.custome_dialog_doctor_report);
+                                    TextView tv_dialog_title = (TextView) reportDialog.findViewById(R.id.tv_dialog_title);
+                                    final EditText et_dialog_report = (EditText) reportDialog.findViewById(R.id.et_dialog_report);
+                                    Button bt_dialog_submit_report = (Button) reportDialog.findViewById(R.id.bt_dialog_submit_report);
+
+
+                                    //submit button click listener
+                                    bt_dialog_submit_report.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            String reportText = et_dialog_report.getText().toString();
+                                            if (reportText.length() == 0) {
+                                                et_dialog_report.setError("Should not be Empty");
+
+                                            } else {
+                                                reportDialog.dismiss();
+                                                Log.e("TAG", "The report Text is: " + reportText);
+                                                //calling report api
+                                                reportProfileSendingDataService(user_id, mClaimeeID, reportText, full_name, mClaimeeName);
+
+                                            }
+
+                                        }
+                                    });
+
+
+                                    reportDialog.setCancelable(false);
+                                    reportDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationTooDouen;
+                                    reportDialog.show();
+
+
+                            }
+                            else {
+
+                                    Toast.makeText(PinVerification.this, "Only Doctor Can Claim Doctor Profile", Toast.LENGTH_SHORT).show();
+                                    finish();
+                        }
                         }
                     } else {
 
                         String errorMsg = jObj.getString("error_message");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                        Toast.makeText(PinVerification.this, errorMsg, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -208,7 +340,7 @@ public class PinVerification extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(PinVerification.this,
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 //hideDialog();
                 dialog.dismiss();
@@ -242,7 +374,7 @@ public class PinVerification extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         // Adding request to request queue
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(strReq, cancel_req_tag);
+        AppSingleton.getInstance(PinVerification.this).addToRequestQueue(strReq, cancel_req_tag);
     }//end of registration service
 
     private void showDialog() {
@@ -290,7 +422,7 @@ public class PinVerification extends AppCompatActivity {
 
                     if (!error) {
 
-                        Toast.makeText(getApplicationContext() , "Code Sent Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PinVerification.this , "Code Sent Successfully", Toast.LENGTH_SHORT).show();
                         dialog.hide();
 
                         mCode = jObj.getString("code");
@@ -345,7 +477,7 @@ public class PinVerification extends AppCompatActivity {
 
 
                         String errorMsg = jObj.getString("error_message");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                        Toast.makeText(PinVerification.this, errorMsg, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -357,7 +489,7 @@ public class PinVerification extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(PinVerification.this,
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 //hideDialog();
                 dialog.dismiss();
@@ -391,7 +523,7 @@ public class PinVerification extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         // Adding request to request queue
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(strReq, cancel_req_tag);
+        AppSingleton.getInstance(PinVerification.this).addToRequestQueue(strReq, cancel_req_tag);
     }//end of registration service
 
 
@@ -457,6 +589,182 @@ public class PinVerification extends AppCompatActivity {
 
             }
         });
+    }
+
+    //claim profile API service
+    private void cliamProfileSendingDataService(final String myid, final String climId, final String doctorName, final String calimeeName){
+
+        // Tag used to cancel the request
+        String cancel_req_tag = "register";
+
+        mClaimDialog = new CustomProgressDialog(PinVerification.this, 1);
+        mClaimDialog.show();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Glob.CLAI_PROFILE_MURL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e("TAG", "Calim Profile URL: " + response.toString());
+                mClaimDialog.hide();
+
+                try {
+
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    if (!error) {
+
+                        String message = jObj.getString("error_message");
+                        if (message.equals("Claimed Successfully")) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(PinVerification.this);
+                            alert.setTitle("Profiel Claim in Process");
+                            alert.setIcon(android.R.drawable.ic_dialog_alert);
+
+                            alert.setMessage("Thank You! " + doctorName + " Your Claim to "+ calimeeName + " Submitted Succesfully, We Will Notify You Soon");
+                            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    dialogInterface.dismiss();
+
+                                }
+                            });
+
+                            alert.show();
+                        }
+
+                    } else {
+
+                        String errorMsg = jObj.getString("error_message");
+                        Toast.makeText(PinVerification.this, errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", "Registration Error: " + error.getMessage());
+                Toast.makeText(PinVerification.this, "Server Connection Failed", Toast.LENGTH_SHORT).show();
+                mClaimDialog.cancel();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+
+
+
+                Map<String, String> params = new HashMap<String, String>();
+                //params.put("doctor_user_name", signUpUserNameText);
+                params.put("key", Glob.Key);
+                params.put("doctor_id", myid);
+                params.put("claimed_id", climId);
+
+                return params;
+            }
+        };
+
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // Adding request to request queue
+
+        AppSingleton.getInstance(PinVerification.this).addToRequestQueue(strReq, cancel_req_tag);
+    }
+
+
+    //claim report user api API service
+    private void reportProfileSendingDataService(final String reporterID, final String toReportID, final String reportText, final String reporterName, final String toReportName){
+
+        // Tag used to cancel the request
+        String cancel_req_tag = "register";
+
+        dialog = new CustomProgressDialog(PinVerification.this, 1);
+        dialog.show();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Glob.REPORT_DOCTOR, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e("TAG", "Calim Profile URL: " + response.toString());
+                dialog.hide();
+
+                try {
+
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    if (!error) {
+
+                        String message = jObj.getString("error_message");
+                        if (message.equals("Reported Successfully")) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(PinVerification.this);
+                            alert.setTitle("Your Report in Process");
+                            alert.setIcon(android.R.drawable.ic_dialog_alert);
+
+                            alert.setMessage("Thank You! " + reporterName + " Your Report Against "+ toReportName + " Submitted Succesfully, We Will Notify You Soon");
+                            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    dialogInterface.dismiss();
+                                    finish();
+
+                                }
+                            });
+
+                            alert.show();
+                            alert.setCancelable(false);
+                        }
+
+                    } else {
+
+                        String errorMsg = jObj.getString("error_message");
+                        Toast.makeText(PinVerification.this, errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", "Registration Error: " + error.getMessage());
+                Toast.makeText(PinVerification.this, "Server Connection Failed", Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+
+
+
+                Map<String, String> params = new HashMap<String, String>();
+                //params.put("doctor_user_name", signUpUserNameText);
+                params.put("key", Glob.Key);
+                params.put("doctor_id", toReportID);
+                params.put("user_id", reporterID);
+                params.put("report", reportText);
+
+                return params;
+            }
+        };
+
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // Adding request to request queue
+
+        AppSingleton.getInstance(PinVerification.this).addToRequestQueue(strReq, cancel_req_tag);
     }
 
 }

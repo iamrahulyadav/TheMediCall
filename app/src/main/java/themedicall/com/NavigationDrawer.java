@@ -214,6 +214,9 @@ public class NavigationDrawer extends AppCompatActivity
         } else if (id == R.id.free_consultation) {
             if (createAccount.getTitle().equals("Create Account")) {
                 Intent intent = new Intent(NavigationDrawer.this, SelectSignUpOptions.class);
+                intent.putExtra("claimee_id", "");
+                intent.putExtra("claimee_name","");
+                intent.putExtra("from", "");
                 startActivity(intent);
             }
             if (createAccount.getTitle().equals("Free Consultation")) {
@@ -469,6 +472,7 @@ public class NavigationDrawer extends AppCompatActivity
                 String profile_img = sharedPreferences.getString("profile_img", null);
                 String userTable = sharedPreferences.getString("usertable", null);
 
+
                 createAccount.setTitle(getResources().getString(R.string.free_consultation));
                 createAccount.setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.freeconsultation));
 
@@ -502,8 +506,11 @@ public class NavigationDrawer extends AppCompatActivity
                 }
 
 
-                Picasso.with(this).load(PROFILE_IMAGE_URL).transform(new CircleTransformPicasso()).into(imageView);
-
+                if (profile_img.contains("facebook") || profile_img.contains("google")){
+                    Picasso.with(this).load(profile_img).transform(new CircleTransformPicasso()).into(imageView);
+                }else {
+                    Picasso.with(this).load(PROFILE_IMAGE_URL).transform(new CircleTransformPicasso()).into(imageView);
+                }
 
             }
             else {

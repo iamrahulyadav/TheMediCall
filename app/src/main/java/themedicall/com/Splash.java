@@ -1,24 +1,35 @@
 package themedicall.com;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.LightingColorFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import themedicall.com.Adapter.CitiesListCustomAdapter;
+import themedicall.com.Adapter.HospitalFilterAdapter;
 import themedicall.com.GetterSetter.CitiesGetterSetter;
+import themedicall.com.GetterSetter.HospitalSearchFilterGetterSetter;
 import themedicall.com.Globel.DatabaseHelper;
 import themedicall.com.Globel.Glob;
 import themedicall.com.Services.GetAllCitiesListService;
@@ -38,6 +49,7 @@ public class Splash extends AppCompatActivity {
     ImageView splash_Image ;
 
 
+    int indext = 0;
 
     //service data
     float value = 0;
@@ -51,6 +63,9 @@ public class Splash extends AppCompatActivity {
     private static final String TAG = "City Service";
     public static List<CitiesGetterSetter> CityList;
 
+    TextView tv_progress;
+    ProgressBar progress;
+
     //
 
 
@@ -61,8 +76,12 @@ public class Splash extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         splash_Image = (ImageView) findViewById(R.id.splash_Image);
+        tv_progress = (TextView) findViewById(R.id.tv_progress);
+        progress  = (ProgressBar) findViewById(R.id.progress);
 
         CityList = new ArrayList<>();
+
+
 
         Glide.with(getApplicationContext())
                 .load(R.drawable.splashscreen)
@@ -75,7 +94,8 @@ public class Splash extends AppCompatActivity {
 
         if (dbCount>1){
             Log.e("TAG", "Already data in database");
-            handlerCall();
+            isUserExit();
+            //handlerCall();
         }
         else {
 
@@ -232,7 +252,7 @@ public class Splash extends AppCompatActivity {
     }
 
 
-    private class SaveToDatabase extends AsyncTask<String, Void, String> {
+    private class SaveToDatabase extends AsyncTask<String, Integer, String> {
 
         @Override
         protected void onPreExecute() {
@@ -245,14 +265,22 @@ public class Splash extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-
             DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
             if (dbHelper.getCount()<1) {
                 if (CityList.size() > 1) {
-                    for (CitiesGetterSetter CGS : CityList) {
+                    for (int s = 0; s<CityList.size(); s++){
+                    //for (CitiesGetterSetter CGS : CityList) {
+                        CitiesGetterSetter CGS = CityList.get(s);
+
                         long isInderted = dbHelper.insertCitiesInTable(CGS);
                         if (isInderted > -1) {
                             Log.e("TAG", "City inserted to table");
+
+
+                            publishProgress(s);
+
+                            //int percentage = (CityList.size())/();
+
 
                             CitiesGetterSetter sss = CityList.get(CityList.size() - 1);
                             if (sss.equals(CGS)){
@@ -275,12 +303,27 @@ public class Splash extends AppCompatActivity {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
 
-            Log.e("TAG", "the progress values is: " + values[0]);
-        }
+            progress.setVisibility(View.VISIBLE);
+            Log.e("TAG", "the Pregress Values is: " + values[0]);
+            int currentValues = values[0];
+            currentValues = currentValues+1;
+            int totalSizeOfArray = CityList.size();
 
+            int p1 = currentValues*100;
+            int percentage = p1/totalSizeOfArray;
+
+            Log.e("TAG", "The division result is multiply by 100: " + p1);
+            Log.e("TAG", "The division result is percentage: " + percentage);
+
+
+            progress.setProgress(percentage);
+            progress.setMax(100);
+            tv_progress.setText("Loading " + percentage + " %");
+
+        }
 
         @Override
         protected void onPostExecute(String result) {
@@ -305,4 +348,106 @@ public class Splash extends AppCompatActivity {
         }
 
     }
+
+
+    private void isUserExit(){
+
+        SharedPreferences sharedPreferences = getSharedPreferences("usercrad", 0);
+        if (sharedPreferences!=null){
+            String userId = sharedPreferences.getString("userid", null);
+            if (userId!=null){
+
+                Log.e("TAG", "The user id is: " + userId);
+                gettingResposeIfUerStilExist(userId);
+
+
+    } else {
+                handlerCall();
+            }
+        }
+        else {
+            handlerCall();
+        }
+        }
+
+        private void gettingResposeIfUerStilExist(final String userID){
+            // Tag used to cancel the request
+            String cancel_req_tag = "UserExistance";
+
+
+            Log.e("TAG", "user in this function");
+
+            StringRequest strReq = new StringRequest(Request.Method.POST, Glob.CHECK_USER_EXISTANCE, new Response.Listener<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    Log.e(TAG, "Is User Exist Response: " + response.toString());
+
+                    try {
+                        JSONObject jObj = new JSONObject(response);
+                        boolean error = jObj.getBoolean("error");
+
+                        if (error) {
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("usercrad", 0);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.clear();
+                            editor.commit();
+                            handlerCall();
+
+                        }else
+                        {
+                            handlerCall();
+                        }
+
+                        }
+                     catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Hospital Filter Error: " + error.getMessage());
+
+                    /*Intent restart = new Intent(Splash.this, Splash.class);
+                    startActivity(restart);
+                    finish();*/
+                    Toast.makeText(Splash.this, "Server Connect Faile Please Retry", Toast.LENGTH_LONG).show();
+                }
+            }) {
+
+                @Override
+                protected Map<String, String> getParams() {
+                    // Posting params to register url
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    //Toast.makeText(FindDoctor.this, "speciality_id in service"+speciality_id, Toast.LENGTH_SHORT).show();
+
+                    params.put("key", Glob.Key);
+                    params.put("user_id", userID);
+
+                    return params;
+                }
+            };
+            strReq.setRetryPolicy(new DefaultRetryPolicy(
+                    10000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            // Adding request to request queue
+            AppSingleton.getInstance(getApplicationContext()) .addToRequestQueue(strReq, cancel_req_tag);
+        }
+
+
+        private class GetLoadingPercentage extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+        }
+    }
+
 }

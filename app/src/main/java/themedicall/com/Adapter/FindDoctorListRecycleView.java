@@ -2,12 +2,16 @@ package themedicall.com.Adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,25 +21,47 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import themedicall.com.DoctorDetail;
 import themedicall.com.GetterSetter.FindDoctorGetterSetter;
 import themedicall.com.Globel.CircleTransformPicasso;
+import themedicall.com.Globel.CustomProgressDialog;
 import themedicall.com.Globel.Glob;
 import themedicall.com.R;
+import themedicall.com.SelectSignUpOptions;
+import themedicall.com.SignIn;
+import themedicall.com.SignUp;
+import themedicall.com.VolleyLibraryFiles.AppSingleton;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by Muhammad Adeel on 7/21/2017.
@@ -54,6 +80,8 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
     private boolean isLoadingAdded = false;
     private boolean isIdFojnd = false;
 
+    CustomProgressDialog dialog;
+
     public FindDoctorListRecycleView( Context context , List<FindDoctorGetterSetter> adList  ) {
         this.DocList = adList;
         this.mContext = context;
@@ -71,6 +99,7 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
         LinearLayout docBottomLayout ,  shareLayout ;
         private ArrayList degreeList ;
         ArrayList landLine;
+        ImageView im_pencila_icon;
 
 
         public MyViewHolder(final View view) {
@@ -101,6 +130,8 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
             shareLayout = (LinearLayout) view.findViewById(R.id.shareLayout);
             doctorRowRating = (RatingBar) view.findViewById(R.id.doctorRowRating);
             landLine = new ArrayList();
+
+            im_pencila_icon = (ImageView) view.findViewById(R.id.im_pencila_icon);
 
             doctorRowPhoneImg.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -169,6 +200,9 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
                 }
             });
 
+
+
+
         }
     }
 
@@ -176,7 +210,6 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
 
         MyViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -232,6 +265,7 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
                     holder.degreeList = DocList.get(position).getDoctorRowDegree();
                     holder.landLine = DocList.get(position).getLandLineList();
                     holder.allhospitalList = DocList.get(position).getHospitalList();
+
 
 
 
@@ -342,8 +376,6 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
         }
 
 
-
-
     }
 
 
@@ -452,6 +484,7 @@ public class FindDoctorListRecycleView extends RecyclerView.Adapter<FindDoctorLi
 
 
     }
+
 
 
 }

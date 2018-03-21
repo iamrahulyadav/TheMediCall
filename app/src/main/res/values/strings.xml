@@ -177,4 +177,17 @@
     <string name="title_activity_sign_upambulance">Sign Up As Ambulance</string>
     <string name="title_activity_sign_up_for_alied_health">SignUpForAliedHealth</string>
 
+
+    <string-array name="alied_health_status">
+        <item>Select Status</item>
+        <item>Physiotherapist</item>
+        <item>Nutritionistt</item>
+        <item>Pharmacist</item>
+        <item>Psychologist</item>
+        <item>Staff Nurse</item>
+        <item>Technician</item>
+        <item>Optometrist</item>
+        <item>Fitness Trainer</item>
+    </string-array>
+
 </resources>

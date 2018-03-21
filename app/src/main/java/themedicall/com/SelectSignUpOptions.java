@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.signin.internal.SignInHubActivity;
 
 import themedicall.com.Adapter.SelectSignUpOptionListRecycleView;
 import themedicall.com.GetterSetter.SelectSIgnUpOptionGetterSetter;
@@ -25,6 +28,12 @@ public class SelectSignUpOptions extends AppCompatActivity {
     List<SelectSIgnUpOptionGetterSetter> singUpOptionList;
     TextView skipEnter;
     ImageView signupdoctor , signuppatient , signuphospital , signuplab , signuppharmacy , signuphealthprofessional , signupblood , signupambulance ;
+
+
+    String mClaimeeID = "";
+    String mClimeeName = "";
+    String mFrome = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +64,21 @@ public class SelectSignUpOptions extends AppCompatActivity {
 
     public void initiate()
     {
-//        recyclerView_sign_in_option = (RecyclerView) findViewById(R.id.recycler_view_sign_up_option);
-//        recyclerView_sign_in_option.setHasFixedSize(true);
-//        recyclerView_sign_in_option.setLayoutManager(new GridLayoutManager(SelectSignUpOptions.this , 2 , GridLayoutManager.VERTICAL, false ));
+
+
+        Intent intent = getIntent();
+
+        String claimeeId = intent.getStringExtra("claimee_id");
+        Log.e("TAG", "then the claimeed is is here: " + claimeeId);
+
+        if (claimeeId!=null ||  !claimeeId.equals(null) || claimeeId.length()>0){
+            mClimeeName = getIntent().getStringExtra("claimee_name");
+            mFrome = getIntent().getStringExtra("from");
+            mClaimeeID = claimeeId;
+        }
+
+
+
         singUpOptionList = new ArrayList<>();
         skipEnter = (TextView) findViewById(R.id.skipAndEnter);
 
@@ -80,6 +101,9 @@ public class SelectSignUpOptions extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SelectSignUpOptions.this , SignUp.class);
                 intent.putExtra("item_position" , 0);
+                intent.putExtra("claimee_id", mClaimeeID);
+                intent.putExtra("claimee_name", mClimeeName);
+                intent.putExtra("from", mFrome);
                 startActivity(intent);
                 finish();
             }
@@ -90,6 +114,9 @@ public class SelectSignUpOptions extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SelectSignUpOptions.this , SignUp.class);
                 intent.putExtra("item_position" , 1);
+                intent.putExtra("claimee_id", mClaimeeID);
+                intent.putExtra("claimee_name", mClimeeName);
+                intent.putExtra("from", mFrome);
                 startActivity(intent);
                 finish();
             }
@@ -132,10 +159,10 @@ public class SelectSignUpOptions extends AppCompatActivity {
         signuphealthprofessional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(SelectSignUpOptions.this , SignUp.class);
-//                intent.putExtra("item_position" , 5);
-//                startActivity(intent);
-                comingSoonDialog();
+                Intent intent = new Intent(SelectSignUpOptions.this , SignUpForAliedHealth.class);
+                //intent.putExtra("item_position" , 5);
+                startActivity(intent);
+               // comingSoonDialog();
             }
         });
 
@@ -145,6 +172,9 @@ public class SelectSignUpOptions extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SelectSignUpOptions.this , SignUp.class);
                 intent.putExtra("item_position" , 6);
+                intent.putExtra("claimee_id", mClaimeeID);
+                intent.putExtra("claimee_name", mClimeeName);
+                intent.putExtra("from", mFrome);
                 startActivity(intent);
                 finish();
             }

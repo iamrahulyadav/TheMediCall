@@ -43,6 +43,7 @@ public class GettingAllHospitalListService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         init();
+        Log.e("TAG", "the server is calling from start command: ");
         getAllHospitals();
 
         return super.onStartCommand(intent, flags, startId);

@@ -88,6 +88,7 @@ import themedicall.com.VolleyLibraryFiles.AppSingleton;
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
 import net.gotev.uploadservice.UploadInfo;
+import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadStatusDelegate;
 
 import org.json.JSONArray;
@@ -1317,7 +1318,8 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
+                //preventing user to select future date
+                view.setMaxDate(System.currentTimeMillis());
                 updateLabel();
             }
         };
@@ -1337,8 +1339,8 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
     }
     private void updateLabel() {
 
-        String myFormat = "yyyy-mm-dd"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
 
         signUpDob.setText(sdf.format(myCalendar.getTime()));
     }
@@ -1904,9 +1906,28 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
 
                 Log.e("TAG", "Doctor Status id is: "+ GetAllDoctorDetailService.experience_status_id);
                 Log.e("TAG", "PFROFILE IMAGE URL: " + GetAllDoctorDetailService.doctor_img);
+                String imgeUrl = Glob.IMAGE_BACK_URL+GetAllDoctorDetailService.doctor_img;
+                PROFILE_IMAGE_URL = imgeUrl;
 
-                PROFILE_IMAGE_URL = Glob.IMAGE_BACK_URL+GetAllDoctorDetailService.doctor_img;
-                Picasso.with(getActivity()).load(PROFILE_IMAGE_URL).transform(new CircleTransformPicasso()).into(profileImg);
+                if (GetAllDoctorDetailService.doctor_img.contains("male_doctor") || GetAllDoctorDetailService.doctor_img.contains("female_doctor")){
+
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("usercrad", 0);
+                    if (sharedPreferences!=null){
+                        String pImage = sharedPreferences.getString("profile_img", null);
+                        Log.e("TAG", "Shared Profile Image is: " + pImage);
+
+                        if (!pImage.equals(null)){
+                            if (pImage.contains("facebook") || pImage.contains("google")){
+                            Picasso.with(getActivity()).load(pImage).transform(new CircleTransformPicasso()).into(profileImg);
+                        }
+
+
+                        }
+                    }
+                }else {
+                    Picasso.with(getActivity()).load(PROFILE_IMAGE_URL).transform(new CircleTransformPicasso()).into(profileImg);
+                }
+
                 Glide
                         .with(getActivity())
                         .load(PROFILE_IMAGE_URL)
@@ -2018,19 +2039,20 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
             Log.e("TAG", "Selected ID: " + id);*/
 
             int sizeSpecialistyArray = GetAllDoctorDetailService.specialistIdList.size();
+            if (sizeSpecialistyArray>0) {
+                for (int i = 0; i < sizeSpecialistyArray; i++) {
+                    View child = getLayoutInflater().inflate(R.layout.custome_tag_layout_specialist, null);
+                    TextView specialistTilt = (TextView) child.findViewById(R.id.tv_tag);
+                    TextView specialistId = (TextView) child.findViewById(R.id.tv_id);
+                    CitiesGetterSetter citGS = GetAllDoctorDetailService.specialistIdList.get(i);
 
-            for (int i = 0; i < sizeSpecialistyArray; i++) {
-                View child = getLayoutInflater().inflate(R.layout.custome_tag_layout_specialist, null);
-                TextView specialistTilt = (TextView) child.findViewById(R.id.tv_tag);
-                TextView specialistId = (TextView) child.findViewById(R.id.tv_id);
-                CitiesGetterSetter citGS = GetAllDoctorDetailService.specialistIdList.get(i);
+                    specialistTilt.setText(citGS.getName());
+                    specialistId.setText(citGS.getId());
 
-                specialistTilt.setText(citGS.getName());
-                specialistId.setText(citGS.getId());
-
-                rl_custom_specialist_tags.setVisibility(View.VISIBLE);
-                rl_custom_specialist_tags.addView(child);
-                //ac_sup_specialisty.setText("");
+                    rl_custom_specialist_tags.setVisibility(View.VISIBLE);
+                    rl_custom_specialist_tags.addView(child);
+                    //ac_sup_specialisty.setText("");
+                }
             }
 
             subSpecialistArrayList = GetAllDoctorDetailService.allSubspecialitiesList;
@@ -2049,6 +2071,7 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
 
 
             int sizeSubSpecialistyArray = GetAllDoctorDetailService.subSpecialistIdList.size();
+            if (sizeSubSpecialistyArray>0){
             for (int i = 0; i < sizeSubSpecialistyArray; i++) {
 
                 View child = getLayoutInflater().inflate(R.layout.custom_layout_sub_specialist, null);
@@ -2065,9 +2088,11 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
                 ac_sup_specialisty.setText("");
 
             }
+            }
 
             //
             int sizeSubServicesArray = GetAllDoctorDetailService.servicesIdList.size();
+            if (sizeSubServicesArray>0){
             for (int i = 0; i < sizeSubServicesArray; i++) {
 
                 View child = getLayoutInflater().inflate(R.layout.custom_layout_sub_specialist, null);
@@ -2082,43 +2107,46 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
                 fl_dr_services.addView(child);
                 ac_sup_services.setText("");
             }
+            }
 
 
             int sizeQualificationArray = GetAllDoctorDetailService.qualificationIdList.size();
-            for (int i = 0; i < sizeQualificationArray; i++) {
+            if(sizeQualificationArray>0) {
+                for (int i = 0; i < sizeQualificationArray; i++) {
 
-                View child = getLayoutInflater().inflate(R.layout.custom_layout_sub_specialist, null);
-                TextView subQualificationTitl = (TextView) child.findViewById(R.id.tv_tag);
-                TextView subQaulificationID = (TextView) child.findViewById(R.id.tv_id);
-                TextView specialistyId  = (TextView) child.findViewById(R.id.tv_speciality_id);
-                subQualificationTitl.setText(GetAllDoctorDetailService.qualificationIdList.get(i).getName());
-                subQaulificationID.setText(GetAllDoctorDetailService.qualificationIdList.get(i).getId());
-                specialistyId.setText(GetAllDoctorDetailService.qualificationIdList.get(i).getSpecialityId());
+                    View child = getLayoutInflater().inflate(R.layout.custom_layout_sub_specialist, null);
+                    TextView subQualificationTitl = (TextView) child.findViewById(R.id.tv_tag);
+                    TextView subQaulificationID = (TextView) child.findViewById(R.id.tv_id);
+                    TextView specialistyId = (TextView) child.findViewById(R.id.tv_speciality_id);
+                    subQualificationTitl.setText(GetAllDoctorDetailService.qualificationIdList.get(i).getName());
+                    subQaulificationID.setText(GetAllDoctorDetailService.qualificationIdList.get(i).getId());
+                    specialistyId.setText(GetAllDoctorDetailService.qualificationIdList.get(i).getSpecialityId());
 
 
-                fl_dr_qualifications.setVisibility(View.VISIBLE);
-                fl_dr_qualifications.addView(child);
-                ac_sup_qualifications.setText("");
+                    fl_dr_qualifications.setVisibility(View.VISIBLE);
+                    fl_dr_qualifications.addView(child);
+                    ac_sup_qualifications.setText("");
 
+                }
             }
-
             //
             int sizeRegistrationArray = GetAllDoctorDetailService.registrationIdList.size();
-            for (int i = 0; i < sizeRegistrationArray; i++) {
+            if (sizeRegistrationArray>0) {
+                for (int i = 0; i < sizeRegistrationArray; i++) {
 
-                View child = getLayoutInflater().inflate(R.layout.custom_layout_sub_specialist, null);
-                TextView subRegistrationTitl = (TextView) child.findViewById(R.id.tv_tag);
-                TextView subRegistrationID = (TextView) child.findViewById(R.id.tv_id);
-                subRegistrationTitl.setText(GetAllDoctorDetailService.registrationIdList.get(i).getName());
-                subRegistrationID.setText(GetAllDoctorDetailService.registrationIdList.get(i).getId());
+                    View child = getLayoutInflater().inflate(R.layout.custom_layout_sub_specialist, null);
+                    TextView subRegistrationTitl = (TextView) child.findViewById(R.id.tv_tag);
+                    TextView subRegistrationID = (TextView) child.findViewById(R.id.tv_id);
+                    subRegistrationTitl.setText(GetAllDoctorDetailService.registrationIdList.get(i).getName());
+                    subRegistrationID.setText(GetAllDoctorDetailService.registrationIdList.get(i).getId());
 
-                BioUpdateDoctorProfile.fl_for_reegistration.setVisibility(View.VISIBLE);
-                BioUpdateDoctorProfile.fl_for_reegistration.addView(child);
-                BioUpdateDoctorProfile.bioRegistration.setText("");
+                    BioUpdateDoctorProfile.fl_for_reegistration.setVisibility(View.VISIBLE);
+                    BioUpdateDoctorProfile.fl_for_reegistration.addView(child);
+                    BioUpdateDoctorProfile.bioRegistration.setText("");
 
 
+                }
             }
-
 
             int sizeInstituationsArray = GetAllDoctorDetailService.instituationIdList.size();
             for (int i = 0; i < sizeInstituationsArray; i++) {
@@ -2136,6 +2164,7 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
             }
 
             int sizeExpertiesArray = GetAllDoctorDetailService.expertieseIdList.size();
+            if (sizeExpertiesArray>0){
             for (int i = 0; i < sizeExpertiesArray; i++) {
 
                 View child = getLayoutInflater().inflate(R.layout.custom_layout_sub_specialist, null);
@@ -2143,14 +2172,15 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
                 TextView subexpertieseID = (TextView) child.findViewById(R.id.tv_id);
                 TextView specialistyId  = (TextView) child.findViewById(R.id.tv_speciality_id);
 
-                subExpertiesTitl.setText(GetAllDoctorDetailService.servicesIdList.get(i).getName());
-                subexpertieseID.setText(GetAllDoctorDetailService.servicesIdList.get(i).getId());
-                specialistyId.setText(GetAllDoctorDetailService.servicesIdList.get(i).getSpecialityId());
+                subExpertiesTitl.setText(GetAllDoctorDetailService.expertieseIdList.get(i).getName());
+                subexpertieseID.setText(GetAllDoctorDetailService.expertieseIdList.get(i).getId());
+                specialistyId.setText(GetAllDoctorDetailService.expertieseIdList.get(i).getSpecialityId());
 
                 BioUpdateDoctorProfile.fl_for_experties.setVisibility(View.VISIBLE);
                 BioUpdateDoctorProfile.fl_for_experties.addView(child);
                 BioUpdateDoctorProfile.bioExpertise.setText("");
 
+            }
             }
 
             BioUpdateDoctorProfile.bioAboutMe.setText(GetAllDoctorDetailService.doctor_about_me);
@@ -3638,11 +3668,14 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
             }
 
             //uploadingProfileImage(profileImagePath, drID);
+
             if (isImageLoadingFromDevice) {
+                //if (profileImagePath.equals(GetAllDoctorDetailService.doctor_img))
                 uploadingProfileImage(profileImagePath, drID);
             }
 
         }//end of all discount field fill check
+
 
     }//end of update profile text
 
@@ -3922,7 +3955,7 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
                     .addFileToUpload(imagePath, "picture") //Adding file
                     .addParameter("key", Glob.Key) //Adding text parameter to the request
                     .addParameter("doctor_id", drId)
-                    //.setNotificationConfig(new UploadNotificationConfig())
+                    .setNotificationConfig(new UploadNotificationConfig())
                     .setMaxRetries(2)
                     .setDelegate(new UploadStatusDelegate() {
                         @Override

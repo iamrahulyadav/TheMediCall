@@ -19,15 +19,15 @@ public class MyReceiverForNetworkDialog extends BroadcastReceiver {
         // TODO Auto-generated method stub
 
         int datapassed = intent.getIntExtra("DATAPASSED", 0);
+
         dialog = new Dialog(context);
 
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.internet_connection_dialog);
+        dialog.setCancelable(false);
 
         if (datapassed == 1234){
 
-
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.setContentView(R.layout.internet_connection_dialog);
-            dialog.setCancelable(false);
             TextView enable = (TextView) dialog.findViewById(R.id.enable);
             TextView exit = (TextView) dialog.findViewById(R.id.exit);
             dialog.show();

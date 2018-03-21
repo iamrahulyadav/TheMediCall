@@ -1249,7 +1249,10 @@ public class UpdateDoctorProfile extends AppCompatActivity{
                     mainAutoComplete.setText("");
 
                 }else {
+
+                    hosId.setText("");
                     hosId.setText(id);
+                    mainAutoComplete.setText("");
                     mainAutoComplete.setText(text);
                 }
 

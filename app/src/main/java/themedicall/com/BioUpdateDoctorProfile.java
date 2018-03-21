@@ -54,6 +54,7 @@ import themedicall.com.Services.GetAllDoctorDetailService;
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
 import net.gotev.uploadservice.UploadInfo;
+import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadStatusDelegate;
 
 import org.json.JSONArray;
@@ -1055,8 +1056,10 @@ public class BioUpdateDoctorProfile extends Fragment {
 
             if (BasicInfoUpdateDocProfile.isImageLoadingFromDevice) {
 
+
                 uploadingProfileImage(profileImagePath, drID);
             }
+
 
         }//end of all discount field fill check
 
@@ -1288,6 +1291,11 @@ public class BioUpdateDoctorProfile extends Fragment {
                         String errorMsg = jObj.getString("error_message");
                         if (errorMsg.equals("Updated Successfully")){
 
+                            if (!BasicInfoUpdateDocProfile.isImageLoadingFromDevice) {
+
+                                UpdateDoctorProfile.dialog.dismiss();
+                                updateProfileCompletedDialog();
+                            }
                             Log.e("tag" , "update profile");
 
                         }
@@ -1371,7 +1379,7 @@ public class BioUpdateDoctorProfile extends Fragment {
                     .addFileToUpload(imagePath, "picture") //Adding file
                     .addParameter("key", Glob.Key) //Adding text parameter to the request
                     .addParameter("doctor_id", drId)
-                    //.setNotificationConfig(new UploadNotificationConfig())
+                    .setNotificationConfig(new UploadNotificationConfig())
                     .setMaxRetries(2)
                     .setDelegate(new UploadStatusDelegate() {
                         @Override

@@ -135,6 +135,12 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
     private static final String uniNameError=  "Please Enter University Name";
     private static final String uniRegistrationNoError=  "Please Enter University Registration #";
 
+    String mUserSocialId = "";
+
+    String claimee_id = "";
+    String mClaimee_name = "";
+    String mFrome = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +198,17 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
     {
 
         signUpPosition= getIntent().getIntExtra("item_position",0);
+        String claimeeId = getIntent().getStringExtra("claimee_id");
+        Log.e("TAg", "the claimee id here is: " + claimeeId);
+        if (claimeeId!=null){
+            claimee_id = claimeeId;
+            mClaimee_name = getIntent().getStringExtra("claimee_name");
+           mFrome =  getIntent().getStringExtra("from");
+
+
+           Log.e("TAG", "the frome text is: " + mFrome);
+        }
+
         //Toast.makeText(this, "item Position "+signUpPosition , Toast.LENGTH_SHORT).show();
 
         dialog=new CustomProgressDialog(SignUp.this, 1);
@@ -251,7 +268,38 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
 
 
 
-    }
+        SharedPreferences sharedPreferences = getSharedPreferences("usercrad", 0);
+        if (sharedPreferences!=null) {
+
+            String fullName="", usermeail="", userGender="";
+            String profile_iamge = sharedPreferences.getString("profile_img", null);
+            if (profile_iamge != null) {
+                if (profile_iamge.contains("facebook")) {
+                     fullName = sharedPreferences.getString("userfullname", null);
+                     usermeail = sharedPreferences.getString("useremail", null);
+                     userGender = sharedPreferences.getString("gender", null);
+                    mUserSocialId = sharedPreferences.getString("socialid", "");
+                }
+                else if (profile_iamge.contains("google")){
+                     fullName = sharedPreferences.getString("userfullname", null);
+                     usermeail = sharedPreferences.getString("useremail", null);
+                     mUserSocialId = sharedPreferences.getString("socialid", "");
+                }
+
+
+            signUpFullName.setText(fullName);
+            if (usermeail!=null){
+                signUpEmail.setText(usermeail);
+            }
+            if (userGender.equals("male")){
+                signUpGenderRadioGroup.check(R.id.signUpGenderMale);
+            }else if (userGender.equals("female")){
+                signUpGenderRadioGroup.check(R.id.signUpGenderFeMale);
+            }
+            }
+        }
+
+    }//end of initialization method
 
     public void getText()
     {
@@ -315,48 +363,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
 
         spinnerClickListener();
 
-//        btSignUpSelectDesignation.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                final List<String> stausList = Arrays.asList(getResources().getStringArray(R.array.doctorstatus));
-//
-//                final Dialog dialog = new Dialog(SignUp.this);
-//                dialog.setContentView(R.layout.custom_citylist_search);
-//                dialog.setTitle("Select Status");
-//                ListView cityListView = (ListView) dialog.findViewById(R.id.cityList);
-//                SearchView search_view = (SearchView) dialog.findViewById(R.id.search_view);
-//                search_view.setVisibility(View.GONE);
-//                Button bt_dilaog_done = (Button) dialog.findViewById(R.id.bt_dilaog_done);
-//                bt_dilaog_done.setVisibility(View.GONE);
-//                dialog.show();
-//                dialog.show();
-//
-//
-//                cityListView.setAdapter(new DoctorStatusAdapter(SignUp.this , stausList));
-//
-//                cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                        TextView city_title = (TextView) view.findViewById(R.id.city_title);
-//                        // TextView city_id = (TextView) view.findViewById(R.id.city_id);
-//                        String City = city_title.getText().toString();
-//                        //String City_id = city_id.getText().toString();
-//
-//                        //Toast.makeText(SignUp.this, "id "+City_id, Toast.LENGTH_SHORT).show();
-//
-//                        btSignUpSelectDesignation.setText(City);
-//                        dialog.dismiss();
-//
-//                        //Toast.makeText(SignIn.this, "Pos "+text, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//        /*        EditText searchCity = (EditText) dialog.findViewById(R.id.searchCity);
-//                searchCity.setVisibility(View.GONE);*/
-//            }
-//        });
     }
 
 
@@ -492,48 +498,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
         bloodGroupAdapter = new ArrayAdapter<String>(SignUp.this , R.layout.spinner_list , R.id.spinnerList , bloodGroupArray);
         btSignUpSelectBloodGroup.setAdapter(bloodGroupAdapter);
 
-//        final List<String> Lines = Arrays.asList(getResources().getStringArray(R.array.bloodgroups));
-//
-//        btSignUpSelectBloodGroup.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                final Dialog dialog = new Dialog(SignUp.this);
-//                dialog.setContentView(R.layout.custom_citylist_search);
-//                dialog.setTitle("Select Bloodgroup");
-//                SearchView search_view = (SearchView) dialog.findViewById(R.id.search_view);
-//                search_view.setVisibility(View.GONE);
-//                Button bt_dilaog_done = (Button) dialog.findViewById(R.id.bt_dilaog_done);
-//                bt_dilaog_done.setVisibility(View.GONE);
-//                ListView cityListView = (ListView) dialog.findViewById(R.id.cityList);
-//                dialog.show();
-//
-//
-//                cityListView.setAdapter(new BloodgroupCustomAdapter(SignUp.this , Lines));
-//
-//                cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                        TextView city_title = (TextView) view.findViewById(R.id.city_title);
-//                        // TextView city_id = (TextView) view.findViewById(R.id.city_id);
-//                        String City = city_title.getText().toString();
-//                        //String City_id = city_id.getText().toString();
-//
-//                        //Toast.makeText(SignUp.this, "id "+City_id, Toast.LENGTH_SHORT).show();
-//
-//                        btSignUpSelectBloodGroup.setText(City);
-//                        dialog.dismiss();
-//
-//                        //Toast.makeText(SignIn.this, "Pos "+text, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//               /* EditText searchCity = (EditText) dialog.findViewById(R.id.searchCity);
-//                searchCity.setVisibility(View.GONE);*/
-//            }
-//        });
-
     }
 
 
@@ -579,7 +543,7 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
     private void updateLabel() {
 
         String myFormat = "yyyy-MM-dd"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
         signUpDob.setText(sdf.format(myCalendar.getTime()));
     }
 
@@ -1003,6 +967,9 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                             intent.putExtra("user_id", userID);
                             intent.putExtra("code", CODE);
                             intent.putExtra("signupposition", signUpPosition);
+                            intent.putExtra("claimee_id", claimee_id);
+                            intent.putExtra("claimee_name", mClaimee_name);
+                            intent.putExtra("from", mFrome);
                             startActivity(intent);
                             finish();
 
@@ -1031,6 +998,9 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                             intent.putExtra("user_id", userID);
                             intent.putExtra("code", CODE);
                             intent.putExtra("signupposition", signUpPosition);
+                            intent.putExtra("claimee_id", claimee_id);
+                            intent.putExtra("claimee_name", mClaimee_name);
+                            intent.putExtra("from", mFrome);
                             startActivity(intent);
                             finish();
 
@@ -1061,6 +1031,9 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                             intent.putExtra("user_id", userID);
                             intent.putExtra("code", CODE);
                             intent.putExtra("signupposition", signUpPosition);
+                            intent.putExtra("claimee_id", claimee_id);
+                            intent.putExtra("claimee_name", mClaimee_name);
+                            intent.putExtra("from", mFrome);
                             startActivity(intent);
                             finish();
 
@@ -1088,6 +1061,9 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                                     intent.putExtra("user_id", userID);
                                     intent.putExtra("code", "00");//00 for taging for verifying already register user
                                     intent.putExtra("signupposition", signUpPosition);
+                                    intent.putExtra("claimee_id", claimee_id);
+                                    intent.putExtra("claimee_name", mClaimee_name);
+                                    intent.putExtra("from", mFrome);
                                     startActivity(intent);
                                     finish();
                                     dialogInterface.dismiss();
@@ -1163,6 +1139,7 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                     params.put("pmdc_number", pmdcNumber);
                     params.put("uni_name", signUpUniNameText);
                     params.put("uni_registraion", signUpUniRegistrationNoText);
+                    params.put("social_id", mUserSocialId);
                     //  params.put("pmdc_picture", experienceStatusId);
 
 
@@ -1179,6 +1156,7 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                     params.put("email", signUpEmailText);
                     params.put("password", signUpPassText);
                     params.put("bloodgroup", bloodgroupId);
+                    params.put("social_id", mUserSocialId);
 
                 }
                 else if(signUpPosition == 6)
@@ -1194,6 +1172,7 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                     params.put("email", signUpEmailText);
                     params.put("password", signUpPassText);
                     params.put("bloodgroup", bloodgroupId);
+                    params.put("social_id", mUserSocialId);
 
 
                 }
@@ -1559,8 +1538,20 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
     @Override
     public void onBackPressed() {
         Intent selectSignIn = new Intent(SignUp.this, SelectSignUpOptions.class);
-        startActivity(selectSignIn);
-        finish();
-        super.onBackPressed();
+       if (mFrome.length()>2){
+
+           finish();
+           super.onBackPressed();
+
+       }else {
+
+           selectSignIn.putExtra("claimee_id", "");
+           selectSignIn.putExtra("claimee_name", "");
+           selectSignIn.putExtra("from", "");
+           startActivity(selectSignIn);
+           finish();
+           super.onBackPressed();
+
+       }
     }
 }

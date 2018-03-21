@@ -56,6 +56,7 @@ import themedicall.com.VolleyLibraryFiles.AppSingleton;
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
 import net.gotev.uploadservice.UploadInfo;
+import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadStatusDelegate;
 
 import org.json.JSONArray;
@@ -90,7 +91,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
     public static Button btAdmore;
     public static LinearLayout medicineCustomRow;
     public static ImageView iv_delete_item;
-    public static AutoCompleteTextView editText;
+    public static AutoCompleteTextView editTextBig;
     public static FrameLayout framelayout;
     public static Button bt_select_day;
     public static TextView tv_hospital_id;
@@ -142,7 +143,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
         btAdmore = (Button) view.findViewById(R.id.addFieldBtn);
         medicineCustomRow = (LinearLayout) view.findViewById(R.id.medicineCustomRow);
         iv_delete_item = (ImageView) view.findViewById(R.id.iv_delete_item);
-        editText = (AutoCompleteTextView) view.findViewById(R.id.editText);
+        editTextBig = (AutoCompleteTextView) view.findViewById(R.id.editText);
         framelayout = (FrameLayout) view.findViewById(R.id.framelayout);
         bt_select_day = (Button) view.findViewById(R.id.bt_select_day);
         bt_select_day.setText("Monday");
@@ -188,7 +189,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
         btExitClickListener();
         addTitmingButtoncClickHanlder();
         removeTitmingButtoncClickHanlder();
-        setClickForAutoCompleForHospitalNameFilter(editText, tv_hospital_id);
+        setClickForAutoCompleForHospitalNameFilter(editTextBig, tv_hospital_id);
 
 
         //gettingAllValuesFromViewTest();
@@ -201,7 +202,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
     {
 
         //setting OnItemclick
-        editText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        editTextBig.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -231,7 +232,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
                         }
                     });
                     alertAddingNewHospital.show();
-                    editText.setText("");
+                    editTextBig.setText("");
 
                 }else {
                     tv_hospital_id.setText(id);
@@ -281,6 +282,9 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
 
             hideShowSwitchWidgets(discountPackageSwitch, discountTableLayout, checkUpDiscount, procedureDiscount, otherDiscount, writeAboutOtherPercent);
             showOtherDiscountPackageEditText(otherDiscount, writeAboutOtherPercent);
+
+
+            setClickForAutoCompleForHospitalNameFilter(editText, tv_hospital_id);
 
 
             ImageView iv_delete_item = (ImageView) rowView.findViewById(R.id.iv_delete_item);
@@ -345,7 +349,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
 
             //hospitalNameTextChangeListener(editText, tv_hospital_id);
 
-            setClickForAutoCompleForHospitalNameFilter(editText, tv_hospital_id);
+
 
             final LinearLayout ll_prectice_day_time = (LinearLayout) rowView.findViewById(R.id.ll_prectice_day_time);
 
@@ -385,6 +389,9 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
                 }
 
             }
+
+
+
         }
 
         addTitmingButtoncClickHanlder();
@@ -1389,7 +1396,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
                     } else {
 
                         String errorMsg = jObj.getString("error_message");
-                        Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Server Not Responding", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1439,7 +1446,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
                     .addFileToUpload(imagePath, "picture") //Adding file
                     .addParameter("key", Glob.Key) //Adding text parameter to the request
                     .addParameter("doctor_id", drId)
-                    //.setNotificationConfig(new UploadNotificationConfig())
+                    .setNotificationConfig(new UploadNotificationConfig())
                     .setMaxRetries(2)
                     .setDelegate(new UploadStatusDelegate() {
                         @Override
@@ -1823,14 +1830,16 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("usercrad", 0);
                     String drID = sharedPreferences.getString("myid", null);
 
-
-                    Log.e("TAG", "Selected Name: " + text);
                     Log.e("TAG", " 123 Selected ID: " + id);
                     Log.e("TAG", " 123 Selected ID Docter: " + drID);
 
                     //requestClaimProfileData(id, drID);
 
+                    Log.e("TAG", "the selected Text is from auto complete: " + text);
+
+                    hosId.setText("");
                     hosId.setText(id);
+                    mainAutoComplete.setText("");
                     mainAutoComplete.setText(text);
 
 
@@ -1927,7 +1936,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
                 mHandler.removeCallbacks(mRunnableStartMainActivity);
                 timerHandler = 2;
                 if (textToSearch.length()>=3) {
-                    getHospitalsNameFilter(textToSearch , autoCompleteTextView , hospId, editText, myHospitalAutoCompleteDialog, precticeProgress);
+                    getHospitalsNameFilter(textToSearch , autoCompleteTextView , hospId, editTextBig, myHospitalAutoCompleteDialog, precticeProgress);
                 }
 
             }
@@ -1940,7 +1949,7 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
 
         textToSearch = text;
         autoCompleteTextView = editText;
-        editText = mainAutoComplete;
+        editTextBig = mainAutoComplete;
         precticeProgress = proProgress;
         myHospitalAutoCompleteDialog = dialog;
         hospId = hospID;

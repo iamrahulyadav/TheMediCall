@@ -109,9 +109,9 @@
                             android:layout_height="match_parent"
                             android:src="@drawable/bloodbtn"
                             android:layout_weight="1.1"
+                            android:layout_marginBottom="-5dp"
                             android:scaleType="fitXY"
-                            android:layout_toLeftOf="@+id/blogBtn"
-                            android:layout_marginBottom="-5dp"/>
+                            android:layout_toLeftOf="@+id/blogBtn" />
 
                         <ImageView
                             android:id="@+id/blogBtn"
@@ -134,11 +134,11 @@
                             android:layout_height="match_parent"
                             android:scaleType="fitXY"
                             android:layout_weight="1.1"
+                            android:layout_marginBottom="-5dp"
                             android:src="@drawable/discountbtn"
                             android:layout_toRightOf="@id/blogBtn"
                             android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginBottom="-5dp"/>
+                            android:layout_alignParentEnd="true" />
 
                     </LinearLayout>
 
@@ -147,8 +147,8 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_weight="0.9"
-                        android:layout_marginTop="-32dp"
-                        android:layout_marginBottom="-32dp">
+                        android:layout_marginTop="-35dp"
+                        android:layout_marginBottom="-36dp">
 
 
                         <ImageView
@@ -156,7 +156,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginRight="-10dp"
-                            android:layout_weight="1.4"
+                            android:layout_weight="1.5"
                             android:src="@drawable/videoaudiocallbtn"
                             android:layout_below="@+id/bloodBtn"
                             android:layout_alignParentLeft="true"
@@ -171,25 +171,17 @@
                             android:id="@+id/doctorBtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.9"
+                            android:layout_weight="0.924"
                             android:layout_below="@+id/blogBtn"
                             android:layout_centerHorizontal="true"
                             android:scaleType="fitXY"
-                            android:src="@drawable/doctorbtn"
-                            android:layout_marginTop="-4dp"
-                            android:layout_marginBottom="-4dp" />
-
-
-
-
-
-
+                            android:src="@drawable/doctorbtn" />
 
                         <ImageView
                             android:id="@+id/ambluanceBtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.4"
+                            android:layout_weight="1.5"
                             android:layout_below="@+id/discountBtn"
                             android:layout_marginLeft="-10dp"
                             android:src="@drawable/ambulancebtn"

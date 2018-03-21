@@ -122,6 +122,7 @@ public class GetAllDoctorDetailService extends Service {
                         experience_status_id = jsonObject.getString("experience_status_id");
                         city_id = jsonObject.getString("city_id");
                         doctor_img = jsonObject.getString("doctor_img");
+
                         doctor_cover_photo = jsonObject.getString("doctor_cover_photo");
                         doctor_video = jsonObject.getString("doctor_video");
                         doctor_about_me = jsonObject.getString("doctor_about_me");
@@ -277,6 +278,7 @@ public class GetAllDoctorDetailService extends Service {
 
                         jsonArray = jsonObject.getJSONArray("services");
 
+
                         for (int i = 0; i < jsonArray.length(); i++) {
 
                             JSONObject servicesObject = jsonArray.getJSONObject(i);
@@ -290,6 +292,7 @@ public class GetAllDoctorDetailService extends Service {
 
                             servicesIdList.add(new CustomeTagsGeterSeter(services_id, service_title, specialityID));
                         }
+
 
                         jsonArray = jsonObject.getJSONArray("expertise");
 
@@ -305,6 +308,8 @@ public class GetAllDoctorDetailService extends Service {
 
                             expertieseIdList.add(new CustomeTagsGeterSeter(expertise_id, service_title, specialityID));
                         }
+
+                        Log.e("TAG", "the size of expertiese is: " + expertieseIdList.size());
 
                         jsonArray = jsonObject.getJSONArray("registration");
 

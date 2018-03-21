@@ -1,6 +1,10 @@
 package themedicall.com;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,12 +17,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -42,6 +51,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class DoctorDetail extends AppCompatActivity implements LandLineInferface {
 
@@ -68,7 +79,7 @@ public class DoctorDetail extends AppCompatActivity implements LandLineInferface
     String discountDr;
     Bitmap profileBitmap ;
 
-
+   static ImageView im_pencila_icon;
 
 
 
@@ -104,6 +115,8 @@ public class DoctorDetail extends AppCompatActivity implements LandLineInferface
         getDocInfo();
         //setDocInfo();
         getDocBioService();
+
+        //cliaimOrReportIconClickHandler();
 
 
 
@@ -280,6 +293,8 @@ public class DoctorDetail extends AppCompatActivity implements LandLineInferface
         doctorRowNoOfViews = (TextView) findViewById(R.id.doctorRowNoOfViews);
         shareDoctorLayout = (LinearLayout) findViewById(R.id.shareDoctorLayout);
 
+        im_pencila_icon = (ImageView) findViewById(R.id.im_pencila_icon);
+
         shareDoctorLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,9 +306,12 @@ public class DoctorDetail extends AppCompatActivity implements LandLineInferface
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText + DocPrecticeDetailFragment.doctor_url);
                 view.getContext().startActivity(Intent.createChooser(sharingIntent, "Shearing Option"));
 
+
             }
         });
 
+
+        //cliaimOrReportIconClickHandler();
 
         specialityDesignationList = new ArrayList();
         registrationList = new ArrayList();
@@ -307,6 +325,8 @@ public class DoctorDetail extends AppCompatActivity implements LandLineInferface
         builderRegistration = new StringBuilder();
         builderExpertise = new StringBuilder();
         builderInstitutions = new StringBuilder();
+
+
     }
 
 
@@ -643,4 +663,5 @@ public class DoctorDetail extends AppCompatActivity implements LandLineInferface
         doctorBoiServiceHasRun = false ;
         super.onBackPressed();
     }
+
 }

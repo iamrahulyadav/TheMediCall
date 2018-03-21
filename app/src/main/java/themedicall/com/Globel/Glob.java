@@ -87,6 +87,8 @@ public class Glob {
 
     //calim url
     public static final String CLAI_PROFILE_MURL = URL+"claim-doctor-profile";
+    //report url
+    public static final String REPORT_DOCTOR = URL+"report-doctor-profile";
 
 
     public static final String IMAGE_URL_PATIENT = "http://themedicall.com/public/uploaded/img/patients/";
@@ -95,6 +97,14 @@ public class Glob {
     public static final String FORGOT_PASSWORD = URL+"forgot-password";
     //MediPedia Urls
     public static final String url = "http://themedicall.com/medi-app-api/get-companies";
+    //alied health categories
+    public static final String ALIED_HEALTH_CATEGOREIS = URL+"get-allied-health-categories";
+    //user existance
+    public static final String CHECK_USER_EXISTANCE = URL+"check-user-existence";
+    public static final String SIGNIN_WITH_SOCIAL = URL+"login-social";
+
+    public static final String ALLIED_HEALTH_SIGNUP = URL+"register-allied-health-professional";
+
 
 
 }

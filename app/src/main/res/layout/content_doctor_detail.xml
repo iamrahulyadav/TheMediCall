@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.medicall.ranglerz.com.medicall.DoctorDetail"
+    tools:context=".DoctorDetail"
     tools:showIn="@layout/activity_doctor_detail"
     android:orientation="vertical">
 
@@ -347,6 +347,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center">
+
+
+
+                    <ImageView
+                        android:id="@+id/im_pencila_icon"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/pencil_icon"/>
+
+
 
                 <!--<ImageView-->
                     <!--android:layout_width="15dp"-->

@@ -2,8 +2,10 @@ package themedicall.com;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,11 +23,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class DocPrecticeDetailFragment extends Fragment
@@ -105,7 +111,7 @@ public class DocPrecticeDetailFragment extends Fragment
 
     public static String  doc_practice_hospital_id , doc_practice_doctor_id  , doctor_timing_start_time , doctor_timing_end_time , week_day_id , doc_practice_hospital_name , doc_practice_hospital_img , hospital_addr,
             hospital_lat , hospital_lng , week_day_title , service_title , hospital_landline_id ,  hospital_landline_number;
-    String doctor_full_name , doctor_img , doctor_min_fee , docor_max_fee , doctor_experience , doctor_offer_any_discount , doctor_verified_status , doctor_qualification , speciality_designation , doctor_profile_percent , doctor_views ;
+    String doctor_full_name, doc_id , doctor_img , doctor_min_fee , docor_max_fee , doctor_experience , doctor_offer_any_discount , doctor_verified_status , doctor_qualification , speciality_designation , doctor_profile_percent , doctor_views ;
     Double rating ;
     public static String doctor_url;
 
@@ -508,6 +514,7 @@ public class DocPrecticeDetailFragment extends Fragment
                         practiceObject = new JSONObject(response);
                         JSONObject practice = practiceObject.getJSONObject("doctors");
                         doctor_full_name = practice.getString("doctor_full_name");
+                        doc_id = practice.getString("doctor_id");
                         doctor_img = practice.getString("doctor_img");
                         doctor_min_fee = practice.getString("doctor_min_fee");
                         docor_max_fee = practice.getString("docor_max_fee");
@@ -516,8 +523,11 @@ public class DocPrecticeDetailFragment extends Fragment
                         doctor_verified_status = practice.getString("doctor_verified_status");
                         doctor_views = practice.getString("doctor_views");
                         doctor_url = practice.getString("doctor_url");
+
                         Log.e("tag" , "doc name " +doctor_full_name);
                         Log.e("tag" , "doctor_views " +doctor_views);
+
+                        DoctorDetail.doctorRowId.setText(doc_id);
 
 
 
@@ -666,10 +676,13 @@ public class DocPrecticeDetailFragment extends Fragment
 
                         baisArryHospitals = practice.getJSONArray("hospitals");
 
-                        for (hospitalDetailCount = 0; hospitalDetailCount< baisArryHospitals.length(); hospitalDetailCount++){
+                        Log.e("TAG", "the loop size to which travers: " + baisArryHospitals.length());
+
+                        for (hospitalDetailCount = 0; hospitalDetailCount < baisArryHospitals.length(); hospitalDetailCount++){
 
                             timingList = new ArrayList<>();
                             landLineList = new ArrayList<HospitalLandLineListGetterSetter>();
+
 
 
                             JSONObject practiceObject = baisArryHospitals.getJSONObject(hospitalDetailCount);
@@ -743,21 +756,34 @@ public class DocPrecticeDetailFragment extends Fragment
                             }
 
 
-                            Log.e("tag" , "practice service array " + precticeDetailServiceList.size());
-                            Log.e("tag" , "practice timing array  " + timingList.size());
-
-                            Log.e("tag" , "hospital array count "+ hospitalDetailCount);
+                            Log.e("tag" , "The array list from result hospital ID " + doc_practice_hospital_id);
+                            Log.e("tag" , "The array list from result doctor prectice doctor id " + doc_practice_doctor_id);
+                            Log.e("tag" , "The array list from result prectice hospital name " + doc_practice_hospital_name);
+                            Log.e("tag" , "The array list from result doc_practice_hospital_img " + doc_practice_hospital_img);
+                            Log.e("tag" , "The array list from result hospital_addr " + hospital_addr);
+                            Log.e("tag" , "The array list from result hospital_lat " + hospital_lat);
+                            Log.e("tag" , "The array list from result hospital_lng " + hospital_lng);
+                            Log.e("tag" , "The array list from result hospitalDetailCount " + hospitalDetailCount);
+                            Log.e("tag" , "The array list from result practice service array " + precticeDetailServiceList.size());
+                            Log.e("tag" , "The array list from result practice timing array  " + timingList.size());
+                            Log.e("tag" , "The array list from result landlind number  " + landLineList.size());
+                            Log.e("tag" , "The array list from result landlind number  " + landLineList.size());
 
 
 
                             docPracticeList.add(new DocPrecticeHospitalGetterSetter(doc_practice_hospital_id , doc_practice_doctor_id , doc_practice_hospital_name , doc_practice_hospital_img
                                     ,hospital_addr , hospital_lat , hospital_lng , hospitalDetailCount , landLineList ,  precticeDetailServiceList , timingList ));
 
+
                         }
+
+
+                        Log.e("tag" , "the Array size after adding  " + docPracticeList.size());
 
                         docPracticeDetailServiceHasRun = true ;
 
                         DoctorDetail.doctorDetailLayout.setVisibility(View.VISIBLE);
+
 
                         double lat , lang ;
                         lat = Double.valueOf(docPracticeList.get(0).getHospital_lat()) ;
@@ -775,6 +801,8 @@ public class DocPrecticeDetailFragment extends Fragment
                         double roundAboutKm = round(distance, 1);
 
                         DoctorDetail.doctorRowDistance.setText(String.valueOf(roundAboutKm) + " KM");
+
+                        cliaimOrReportIconClickHandler();
 
 
                         Log.e("TAG", "The size of service List after loop timing : " + docPracticeList.get(0).getTimingList().size());
@@ -853,7 +881,7 @@ public class DocPrecticeDetailFragment extends Fragment
         DoctorDetail.doctorRowPhoneImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  Toast.makeText(DoctorDetail.this, "button click " +temArray.size(), Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(getActivity(), "button click " +temArray.size(), Toast.LENGTH_SHORT).show();
                 int pos = viewPager.getCurrentItem();
                 Log.e("TAG", "the Fragment position is: "+ pos );
                 Fragment fragment = (Fragment) adapter.instantiateItem(viewPager, pos);
@@ -936,6 +964,337 @@ public class DocPrecticeDetailFragment extends Fragment
                 + " Meter   " + meterInDec);
 
         return Radius * c;
+    }
+
+
+    public void cliaimOrReportIconClickHandler(){
+
+
+        //click listner for pencial icon
+
+
+        DoctorDetail.im_pencila_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String docId = DoctorDetail.doctorRowId.getText().toString();
+                Log.e("TAG", "on pencial click doctor id is: " + docId);
+
+                final Dialog claimDialog = new Dialog(getActivity());
+                claimDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                claimDialog.setContentView(R.layout.custome_claim_profile_from_doctor_listing);
+                TextView tv_dialog_title = (TextView) claimDialog.findViewById(R.id.tv_dialog_title);
+                final RadioGroup radioGroup = (RadioGroup) claimDialog.findViewById(R.id.rg_claim_profile);
+                Button bt_dialog_ok = (Button) claimDialog.findViewById(R.id.bt_dialog_ok);
+
+                tv_dialog_title.setText("Report or Claim " +  DoctorDetail.doctorRowName.getText().toString());
+                final String claimeeId = DoctorDetail.doctorRowId.getText().toString();
+
+                //setting on click for ok button
+                bt_dialog_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+                        View radioButton = radioGroup.findViewById(checkedRadioButtonId);
+                        int idx = radioGroup.indexOfChild(radioButton);
+                        Log.e("TAG", "here the id for claimmer  rrrrr: " + idx);
+                        if(idx == -1){
+                            Toast.makeText(getActivity(), "Please Select Radio first", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (idx == 0){
+
+                            //callling claim functionalities
+
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("usercrad", 0);
+                            if (sharedPreferences!=null){
+                                String userTable = sharedPreferences.getString("usertable", null);
+                                if (userTable!=null && userTable.equals("doctors")) {
+
+                                    final String doctorName = sharedPreferences.getString("userfullname", null);
+                                    final String userId = sharedPreferences.getString("myid", null);
+                                    Log.e("TAG", "here the id for claimmer: " + userId);
+                                    Log.e("TAG", "here the id for claimmee: " + claimeeId);
+                                    if (!userId.equals(claimeeId)){
+
+                                        //calling claim api
+                                        cliamProfileSendingDataService(userId, claimeeId, doctorName, DoctorDetail.doctorRowName.getText().toString());
+                                        claimDialog.dismiss();
+
+                                    }else {
+                                        Toast.makeText(getActivity(), "Can not Claim Your Own Profile", Toast.LENGTH_SHORT).show();
+                                        claimDialog.dismiss();
+                                    }
+
+
+                                }else if (userTable!=null && !userTable.equals("doctors")){
+
+                                    Toast.makeText(getActivity(), "Only doctor Can Claim Doctor Profiles", Toast.LENGTH_SHORT).show();
+                                    claimDialog.dismiss();
+                                }
+                                else {
+
+                                    Intent intent = new Intent(getActivity() , SignIn.class);
+                                    //intent.putExtra("item_position" , 0);
+                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("claimee_id", claimeeId);
+                                    intent.putExtra("claimee_name", DoctorDetail.doctorRowName.getText().toString());
+                                    intent.putExtra("from", "claim");
+                                    startActivity(intent);
+                                    claimDialog.dismiss();
+
+                                }
+
+                            }
+                        }
+
+                        else if (idx == 1){
+                            //calling report funcatilaities
+
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("usercrad", 0);
+                            if (sharedPreferences!=null){
+                                final String reporterUserID = sharedPreferences.getString("userid", null);
+                                if (reporterUserID!=null) {
+
+                                    final String reporterName = sharedPreferences.getString("userfullname", null);
+                                    claimDialog.dismiss();
+
+                                    final Dialog reportDialog = new Dialog(getActivity());
+                                    reportDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    reportDialog.setContentView(R.layout.custome_dialog_doctor_report);
+                                    TextView tv_dialog_title = (TextView) reportDialog.findViewById(R.id.tv_dialog_title);
+                                    final EditText et_dialog_report = (EditText) reportDialog.findViewById(R.id.et_dialog_report);
+                                    Button bt_dialog_submit_report = (Button) reportDialog.findViewById(R.id.bt_dialog_submit_report);
+
+
+                                    //submit button click listener
+                                    bt_dialog_submit_report.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            String reportText = et_dialog_report.getText().toString();
+                                            if (reportText.length()==0){
+                                                et_dialog_report.setError("Should not be Empty");
+
+                                            }else
+                                            {
+                                                reportDialog.dismiss();
+                                                Log.e("TAG","The report Text is: " + reportText);
+                                                //calling report api
+                                                reportProfileSendingDataService(reporterUserID, DoctorDetail.doctorRowId.getText().toString(), reportText, reporterName,  DoctorDetail.doctorRowName.getText().toString());
+
+                                            }
+
+                                        }
+                                    });
+
+
+                                    reportDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationTooDouen;
+                                    reportDialog.show();
+
+
+                                }
+                                else {
+
+                                    Toast.makeText(getActivity(), "Please Login or Register first", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getActivity() , SignIn.class);
+                                    //intent.putExtra("item_position" , 0);
+                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("claimee_id", claimeeId);
+                                    intent.putExtra("claimee_name", DoctorDetail.doctorRowName.getText().toString());
+                                    intent.putExtra("from", "report");
+                                    startActivity(intent);
+                                    claimDialog.dismiss();
+                                }
+                            }
+                        }
+
+
+
+                    }
+                });
+
+                claimDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationTooDouen;
+                claimDialog.show();
+
+
+
+            }
+        });
+
+    }
+
+    //claim profile API service
+    private void cliamProfileSendingDataService(final String myid, final String climId, final String doctorName, final String calimeeName){
+
+        // Tag used to cancel the request
+        String cancel_req_tag = "register";
+
+        dialog = new CustomProgressDialog(getActivity(), 1);
+        dialog.show();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Glob.CLAI_PROFILE_MURL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e("TAG", "Calim Profile URL: " + response.toString());
+                dialog.hide();
+
+                try {
+
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    if (!error) {
+
+                        String message = jObj.getString("error_message");
+                        if (message.equals("Claimed Successfully")) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                            alert.setTitle("Profiel Claim in Process");
+                            alert.setIcon(android.R.drawable.ic_dialog_alert);
+
+                            alert.setMessage("Thank You! " + doctorName + " Your Claim to "+ calimeeName + " Submitted Succesfully, We Will Notify You Soon");
+                            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    dialogInterface.dismiss();
+
+                                }
+                            });
+
+                            alert.show();
+                        }
+
+                    } else {
+
+                        String errorMsg = jObj.getString("error_message");
+                        Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", "Registration Error: " + error.getMessage());
+                Toast.makeText(getActivity(), "Server Connection Failed", Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+
+
+
+                Map<String, String> params = new HashMap<String, String>();
+                //params.put("doctor_user_name", signUpUserNameText);
+                params.put("key", Glob.Key);
+                params.put("doctor_id", myid);
+                params.put("claimed_id", climId);
+
+                return params;
+            }
+        };
+
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // Adding request to request queue
+
+        AppSingleton.getInstance(getActivity()).addToRequestQueue(strReq, cancel_req_tag);
+    }
+
+
+    //claim report user api API service
+    private void reportProfileSendingDataService(final String reporterID, final String toReportID, final String reportText, final String reporterName, final String toReportName){
+
+        // Tag used to cancel the request
+        String cancel_req_tag = "register";
+
+        dialog = new CustomProgressDialog(getActivity(), 1);
+        dialog.show();
+        StringRequest strReq = new StringRequest(Request.Method.POST, Glob.REPORT_DOCTOR, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e("TAG", "Calim Profile URL: " + response.toString());
+                dialog.hide();
+
+                try {
+
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    if (!error) {
+
+                        String message = jObj.getString("error_message");
+                        if (message.equals("Reported Successfully")) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                            alert.setTitle("Your Report in Process");
+                            alert.setIcon(android.R.drawable.ic_dialog_alert);
+
+                            alert.setMessage("Thank You! " + reporterName + " Your Report Against "+ toReportName + " Submitted Succesfully, We Will Notify You Soon");
+                            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    dialogInterface.dismiss();
+
+                                }
+                            });
+
+                            alert.show();
+                        }
+
+                    } else {
+
+                        String errorMsg = jObj.getString("error_message");
+                        Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", "Registration Error: " + error.getMessage());
+                Toast.makeText(getActivity(), "Server Connection Failed", Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+
+
+
+                Map<String, String> params = new HashMap<String, String>();
+                //params.put("doctor_user_name", signUpUserNameText);
+                params.put("key", Glob.Key);
+                params.put("doctor_id", toReportID);
+                params.put("user_id", reporterID);
+                params.put("report", reportText);
+
+                return params;
+            }
+        };
+
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // Adding request to request queue
+
+        AppSingleton.getInstance(getActivity()).addToRequestQueue(strReq, cancel_req_tag);
     }
 
 
