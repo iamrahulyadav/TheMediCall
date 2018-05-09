@@ -273,10 +273,22 @@ public class PinVerification extends AppCompatActivity {
                                 }
                                 else {
 
+                                    startIncreasing();
+                                    onClickVerifyLater();
+                                    onClickUpdateProfileClick();
+
                                 }
                             }
 
                             Log.e("TAG", "the selected user position is: " + signUpPosition);
+
+                        }
+                        else if (signUpPosition == 5){
+
+                            startIncreasing();
+                            onClickVerifyLater();
+                            onClickUpdateProfileClick();
+
 
                         }
                         else {
@@ -321,7 +333,9 @@ public class PinVerification extends AppCompatActivity {
                             }
                             else {
 
-                                    Toast.makeText(PinVerification.this, "Only Doctor Can Claim Doctor Profile", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(PinVerification.this, "Only Doctor Can Claim Doctor Profile", Toast.LENGTH_SHORT).show();
+
+
                                     finish();
                         }
                         }
@@ -584,6 +598,13 @@ public class PinVerification extends AppCompatActivity {
                 if (signUpPosition == 6) {
                     Intent updateProfile = new Intent(PinVerification.this, MedicalRecord.class);
                     //startActivity(updateProfile);
+                    finish();
+                }
+
+                if (signUpPosition == 5){
+
+                    Intent updateAliedHealthProfile = new Intent(PinVerification.this, UpdateAliedHelathProfile.class);
+                    startActivity(updateAliedHealthProfile);
                     finish();
                 }
 

@@ -50,6 +50,7 @@ import themedicall.com.GetterSetter.CitiesGetterSetter;
 import themedicall.com.Globel.Glob;
 import themedicall.com.Globel.Utility;
 import themedicall.com.Services.GetAllDoctorDetailService;
+import themedicall.com.Services.UploadProfileImageService;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
@@ -1053,9 +1054,7 @@ public class BioUpdateDoctorProfile extends Fragment {
             Log.e("TAG", "The size of image Array: " + BasicInfoUpdateDocProfile.profileImagePath);
             String profileImagePath = BasicInfoUpdateDocProfile.profileImagePath;
 
-
             if (BasicInfoUpdateDocProfile.isImageLoadingFromDevice) {
-
 
                 uploadingProfileImage(profileImagePath, drID);
             }
@@ -1272,7 +1271,7 @@ public class BioUpdateDoctorProfile extends Fragment {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            //UpdateDoctorProfile.dialog.dismiss();
+            UpdateDoctorProfile.dialog.dismiss();
 
             Log.e("TAG", "Server Respoonse: " + result);
 
@@ -1291,11 +1290,7 @@ public class BioUpdateDoctorProfile extends Fragment {
                         String errorMsg = jObj.getString("error_message");
                         if (errorMsg.equals("Updated Successfully")){
 
-                            if (!BasicInfoUpdateDocProfile.isImageLoadingFromDevice) {
-
-                                UpdateDoctorProfile.dialog.dismiss();
-                                updateProfileCompletedDialog();
-                            }
+                            updateProfileCompletedDialog();
                             Log.e("tag" , "update profile");
 
                         }
@@ -1369,8 +1364,14 @@ public class BioUpdateDoctorProfile extends Fragment {
 
     public void uploadingProfileImage(String imagePath, String drId){
 
+        Intent i = new Intent(getActivity(), UploadProfileImageService.class);
+        i.putExtra("imagePath", imagePath);
+        i.putExtra("drId", drId);
+        getActivity().startService(i);
 
-        //Uploading code
+
+
+        /*//Uploading code
         try {
             String uploadId = UUID.randomUUID().toString();
 
@@ -1445,7 +1446,7 @@ public class BioUpdateDoctorProfile extends Fragment {
 
         } catch (Exception exc) {
             Toast.makeText(getActivity(), exc.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     public static String convertTo24Hour(String Time) {

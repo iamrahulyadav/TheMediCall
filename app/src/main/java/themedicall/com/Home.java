@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +31,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -128,6 +132,13 @@ public class Home extends NavigationDrawer implements
     ImageView doctorFilterImage;
     RelativeLayout.LayoutParams params;
 
+    ImageView  iv_crosee;
+    //ImageView iv_arrow;
+    /*RelativeLayout rl_guide;
+    RelativeLayout rl_frond;*/
+    RelativeLayout rl_for_drawer_icon;
+    ImageView im_up_arrow, iv_touch;
+
     //public static ArrayList<CitiesGetterSetter> CityList = new ArrayList<CitiesGetterSetter>();
     String cityName;
     String cityId;
@@ -167,6 +178,13 @@ public class Home extends NavigationDrawer implements
 
     Dialog networkDialog;
 
+
+    MyReceiverForImageUploaded myReceiverForImageUploaded;
+
+
+    SharedPreferences sharedPreferencesFirstTimeGuied;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,9 +210,26 @@ public class Home extends NavigationDrawer implements
         setImageInActionbar();
         openSearchViewDialog();
 
-
+        onClickForIntroCross();
 
         //callingHospitalListservice();
+
+
+        if(sharedPreferencesFirstTimeGuied!=null){
+            boolean secondTime = sharedPreferencesFirstTimeGuied.getBoolean("yes", false);
+            if (secondTime){
+
+                //do nothing go ahad
+            }
+            else {
+
+                startAniation();
+                SharedPreferences.Editor editor = sharedPreferencesFirstTimeGuied.edit();
+                editor.putBoolean("yes", true);
+                editor.commit();
+
+            }
+        }
 
     }
 
@@ -211,7 +246,6 @@ public class Home extends NavigationDrawer implements
             Toast.makeText(this, "Not Connected!", Toast.LENGTH_SHORT).show();
 
     }
-
 
     public void initiate() {
 
@@ -247,6 +281,20 @@ public class Home extends NavigationDrawer implements
         searchViewImg = (ImageView) customActionBarView.findViewById(R.id.searchViewImg);
         doctorFilterImage = (ImageView) customActionBarView.findViewById(R.id.doctorFilterImage);
 
+      //  iv_arrow = (ImageView) findViewById(R.id.iv_arrow);
+        iv_crosee = (ImageView) findViewById(R.id.iv_crosee);
+       // rl_guide = (RelativeLayout) findViewById(R.id.rl_guide);
+      //  rl_guide.bringToFront();
+     //   rl_frond = (RelativeLayout) findViewById(R.id.rl_frond);
+       // rl_frond.bringToFront();
+
+        rl_for_drawer_icon = (RelativeLayout) findViewById(R.id. rl_for_drawer_icon);
+        im_up_arrow = (ImageView) findViewById(R.id.im_up_arrow);
+        iv_touch = (ImageView) findViewById(R.id.iv_touch);
+        im_up_arrow.bringToFront();
+        iv_touch.bringToFront();
+
+
         params = (RelativeLayout.LayoutParams)locationFilter.getLayoutParams();
         params = (RelativeLayout.LayoutParams)userIcon.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -264,6 +312,8 @@ public class Home extends NavigationDrawer implements
 
         networkDialog = new Dialog(Home.this);
 
+
+        sharedPreferencesFirstTimeGuied = getSharedPreferences("firstTime", 0);
     }
 
 
@@ -847,14 +897,17 @@ public class Home extends NavigationDrawer implements
 
     /*Ending the updates for the location service*/
     @Override
-    protected void onStop() {
+    public void onStop() {
         mGoogleApiClient.disconnect();
         unregisterReceiver(myReceiver);
+
+        //change in onStrop
+        unregisterReceiver(myReceiverForImageUploaded);
         super.onStop();
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         if(mGoogleApiClient!=null){
 
             mGoogleApiClient.connect();
@@ -866,6 +919,13 @@ public class Home extends NavigationDrawer implements
         intentFilter.addAction(Glob.MY_ACTION);
         registerReceiver(myReceiver, intentFilter);
         networkChange();
+
+
+        //chnage in onStart
+        myReceiverForImageUploaded = new MyReceiverForImageUploaded();
+        IntentFilter intentFilterForImageUpload = new IntentFilter();
+        intentFilterForImageUpload.addAction("imageLoaded");
+        registerReceiver(myReceiverForImageUploaded, intentFilterForImageUpload);
         super.onStart();
     }
 
@@ -1437,7 +1497,12 @@ public class Home extends NavigationDrawer implements
         registerReceiver(myReceiver, intentFilter);
 //        networkChange();
 
+
+
+       // startAniation();
+
         super.onResume();
+
 
 
     }
@@ -1736,4 +1801,172 @@ public class Home extends NavigationDrawer implements
 
         }
     }
+
+
+    private void startAniation(){
+
+
+
+
+        animationViews();
+
+        askQuestion.setClickable(false);
+        healthEventBtn.setClickable(false);
+        discountedOffers.setClickable(false);
+        findDoctor.setClickable(false);
+        freeConsultation.setClickable(false);
+        medicineReminder.setClickable(false);
+        labs.setClickable(false);
+        pharmacies.setClickable(false);
+        homeCare.setClickable(false);
+        blood.setClickable(false);
+        jobs.setClickable(false);
+        hospitals.setClickable(false);
+        blog.setClickable(false);
+        ambulance.setClickable(false);
+        medicalRecordBtn.setClickable(false);
+        facebookBtn.setClickable(false);
+        youtubeBtn.setClickable(false);
+        bottomnavigationmedistudy.setClickable(false);
+        bottomnavigationmedipedia.setClickable(false);
+        locationFilter.setClickable(false);
+        userIcon.setClickable(false);
+        searchViewImg.setClickable(false);
+        doctorFilterImage.setClickable(false);
+
+        drawer.setClickable(false);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+
+    }
+
+    private void onClickForIntroCross(){
+        iv_crosee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                askQuestion.setClickable(true);
+                healthEventBtn.setClickable(true);
+                discountedOffers.setClickable(true);
+                findDoctor.setClickable(true);
+                freeConsultation.setClickable(true);
+                medicineReminder.setClickable(true);
+                labs.setClickable(true);
+                pharmacies.setClickable(true);
+                homeCare.setClickable(true);
+                blood.setClickable(true);
+                jobs.setClickable(true);
+                hospitals.setClickable(true);
+                blog.setClickable(true);
+                ambulance.setClickable(true);
+                medicalRecordBtn.setClickable(true);
+                facebookBtn.setClickable(true);
+                youtubeBtn.setClickable(true);
+                bottomnavigationmedistudy.setClickable(true);
+                bottomnavigationmedipedia.setClickable(true);
+                locationFilter.setClickable(true);
+                userIcon.setClickable(true);
+                searchViewImg.setClickable(true);
+                doctorFilterImage.setClickable(true);
+
+                drawer.setClickable(true);
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
+                //rl_frond.setVisibility(View.GONE);
+               // rl_guide.setVisibility(View.GONE);
+                rl_for_drawer_icon.setVisibility(View.GONE);
+                iv_touch.setVisibility(View.GONE);
+
+
+            }
+        });
+    }
+
+    private void animationViews(){
+
+        rl_for_drawer_icon.setVisibility(View.VISIBLE);
+       // rl_frond.setVisibility(View.VISIBLE);
+      //  rl_guide.setVisibility(View.VISIBLE);
+        iv_touch.setVisibility(View.GONE);
+
+        Animation animation;
+        animation = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_to_right);
+
+        final Animation upImageAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move_hand_up);
+
+        final Animation shakeAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+
+        im_up_arrow.startAnimation(upImageAnimation);
+
+       // iv_arrow.startAnimation(animation);
+        upImageAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                im_up_arrow.setImageResource(R.drawable.arra);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                im_up_arrow.setVisibility(View.GONE);
+                iv_touch.setVisibility(View.VISIBLE);
+
+                iv_touch.startAnimation(shakeAnimation);
+                shakeAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                        iv_touch.setVisibility(View.GONE);
+                        animationViews();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+
+            }
+
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+
+    //this is the only change in home
+
+    public class MyReceiverForImageUploaded extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+
+            int datapassed = arg1.getIntExtra("loaded", 0);
+
+
+            if (datapassed == 1) {
+                SharedPreferences sharedPreferences = getSharedPreferences("usercrad", 0);
+                String profileImage = sharedPreferences.getString("profile_img", "");
+                Log.e("TAG", "Image Url is uploaded from ur is: " + profileImage);
+
+                String  PROFILE_IMAGE_URL = Glob.IMAGE_BACK_URL + profileImage;
+                Picasso.with(Home.this).load(PROFILE_IMAGE_URL).placeholder(R.drawable.loginuser).transform(new CircleTransformPicasso()).into(userIcon);
+
+
+            }
+
+        }
+    }
+
 }

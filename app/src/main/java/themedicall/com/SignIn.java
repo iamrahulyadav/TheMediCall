@@ -21,6 +21,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,17 +64,22 @@ import com.facebook.appevents.AppEventsLogger;
 public class SignIn extends AppCompatActivity{
     EditText doctorSignInEmail , doctorSignInPass;
     TextView doctorSignInForgetPass ;
-    Button doctorSignInBtn , doctorSignInFbBtn , doctorSignInGmailBtn , doctorSignUpButton;
+    Button doctorSignInBtn  , doctorSignUpButton;
+    RelativeLayout doctorSignInFbBtn, doctorSignInGmailBtn;
+    TextView tv_google, tv_fb;
     ProgressDialog progressDialog;
     String mSignInText, mSigninPassword;
     CustomProgressDialog dialog;
 
-    Button doctorSignInFb;
+    RelativeLayout doctorSignInFb;
     CallbackManager callbackManager;
     private AccessTokenTracker mAccessTokenTracker;
 
     private static final String EMAIL = "email";
     private boolean isLogin = false;
+
+
+    RelativeLayout iv_circular;
 
     //google sign in
     private static final String TAG = "SignInActivity";
@@ -87,7 +95,7 @@ public class SignIn extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.custome_login_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -115,6 +123,9 @@ public class SignIn extends AppCompatActivity{
     public void initiate()
     {
 
+        iv_circular = (RelativeLayout) findViewById(R.id.iv_circular);
+        iv_circular.bringToFront();
+
         String claimeeId = getIntent().getStringExtra("claimee_id");
         Log.e("TAG", "the claimedId is: " + claimeeId);
 
@@ -130,14 +141,16 @@ public class SignIn extends AppCompatActivity{
         doctorSignInPass = (EditText) findViewById(R.id.doctorSignInPass);
         doctorSignInForgetPass = (TextView) findViewById(R.id.doctorSignInForgetPass);
         doctorSignInBtn = (Button) findViewById(R.id.doctorSignInBtn);
-        doctorSignInFbBtn = (Button) findViewById(R.id.doctorSignInFb);
-        doctorSignInGmailBtn = (Button) findViewById(R.id.doctorSignInGmail);
+        doctorSignInFbBtn = (RelativeLayout) findViewById(R.id.doctorSignInFb);
+        doctorSignInGmailBtn = (RelativeLayout) findViewById(R.id.doctorSignInGmail);
+        tv_google = (TextView) findViewById(R.id.tv_google);
+        tv_fb = (TextView) findViewById(R.id.tv_fb);
         doctorSignUpButton = (Button) findViewById(R.id.doctorSignUpButton);
 
         progressDialog = new ProgressDialog(this);
 
 
-        doctorSignInFb = (Button) findViewById(R.id.doctorSignInFb);
+        doctorSignInFb = (RelativeLayout) findViewById(R.id.doctorSignInFb);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -245,12 +258,12 @@ public class SignIn extends AppCompatActivity{
                 if (isLogin){
                     LoginManager.getInstance().logOut();
                     isLogin = false;
-                    doctorSignInFb.setText("Sign in with Facebook");
+                    tv_fb.setText("Sign in with Facebook");
                 }
                 else {
 
                     isLogin = true;
-                    doctorSignInFb.setText("Log out");
+                    tv_fb.setText("Log out");
                 }
             }
         };
@@ -278,7 +291,7 @@ public class SignIn extends AppCompatActivity{
             public void onClick(View v) {
                 if (mFrome.equals("claim")){
 
-                    Intent intent = new Intent(SignIn.this , SignUp.class);
+                    Intent intent = new Intent(SignIn.this , MedicSignup.class);
                     intent.putExtra("item_position" , 0);
                     intent.putExtra("claimee_id", mClaimeeID);
                     intent.putExtra("claimee_name", mClimeeName);
@@ -780,7 +793,7 @@ public class SignIn extends AppCompatActivity{
         if (account != null) {
             //  mStatusTextView.setText(getString(R.string.signed_in_fmt, account.getDisplayName()));
 
-            doctorSignInGmailBtn.setText("Sign Out");
+            tv_google.setText("Sign Out");
             // findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
 
 
@@ -789,7 +802,7 @@ public class SignIn extends AppCompatActivity{
             // mStatusTextView.setText(R.string.signed_out);
 
 
-            doctorSignInGmailBtn.setText("Login with Gmail");
+            tv_google.setText("Login With Google");
             //  findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
@@ -800,14 +813,14 @@ public class SignIn extends AppCompatActivity{
             @Override
             public void onClick(View view) {
 
-                Log.e("TAG", "text on the button is: " + doctorSignInGmailBtn.getText().toString());
+              //  Log.e("TAG", "text on the button is: " + doctorSignInGmailBtn.getText().toString());
 
-                if (doctorSignInGmailBtn.getText().toString().equals("Sign Out")){
+                if (tv_google.getText().toString().equals("Sign Out")){
 
                     Log.e("TAG", "button presses sign out");
                     signOut();
                 }
-                if (doctorSignInGmailBtn.getText().toString().equals("Login with Gmail")){
+                if (tv_google.getText().toString().equals("Login With Google")){
                     Log.e("TAG", "button presses sign in");
 
                     signIn();

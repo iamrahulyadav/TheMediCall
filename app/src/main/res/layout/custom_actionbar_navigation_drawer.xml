@@ -10,7 +10,6 @@
 
 
 
-
         <Button
             android:id="@+id/locationFilter"
             android:layout_width="wrap_content"
@@ -55,9 +54,6 @@
             android:id="@+id/searchViewImg"
             android:layout_marginRight="8dp"
             />
-
-
-
 
 
         <FrameLayout
@@ -112,4 +108,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:visibility="gone" />
+
+
+
 </RelativeLayout>

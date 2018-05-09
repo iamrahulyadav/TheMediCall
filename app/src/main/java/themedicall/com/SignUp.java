@@ -192,7 +192,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
             }
         });
 
-
     }
     public void initiate()
     {
@@ -204,7 +203,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
             claimee_id = claimeeId;
             mClaimee_name = getIntent().getStringExtra("claimee_name");
            mFrome =  getIntent().getStringExtra("from");
-
 
            Log.e("TAG", "the frome text is: " + mFrome);
         }
@@ -264,7 +262,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                 }
             }
         });
-
 
 
 
@@ -341,9 +338,13 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
         signUpDob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(SignUp.this,R.style.CustomDatePickerDialogTheme,  date, myCalendar
+              DatePickerDialog datePickerDialog =  new DatePickerDialog(SignUp.this,R.style.CustomDatePickerDialogTheme,  date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis()-1000-1);
+
+                datePickerDialog.show();
             }
 
 
@@ -526,7 +527,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
         matcher = pattern.matcher(userName);
         return matcher.matches();
     }
-
 
     public static boolean mobileNumberValidator(final String mobileNumber) {
 
@@ -872,9 +872,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                         RadioButton radioButton = (RadioButton) findViewById(selectedId);
                         signUpSelectedRadioText = radioButton.getText().toString();
 
-
-
-
                         if (signUpSelectBloodGroupText.equals("A+")){bloodgroupId = "1";}
                         if (signUpSelectBloodGroupText.equals("A-")){bloodgroupId = "2";}
                         if (signUpSelectBloodGroupText.equals("B+")){bloodgroupId = "3";}
@@ -921,7 +918,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                     if (!error) {
 
                         Toast.makeText(getApplicationContext() , "Successfully Registered!", Toast.LENGTH_SHORT).show();
-
                         String userID =  jObj.getString("user_id");
                         String CODE = jObj.getString("code");
 
@@ -934,7 +930,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
 
                             String drID = jObj.getString("doctor_id");
                             Log.e("TAG", "Dr id: " + drID);
-
                             Log.e("TAG", "Image URI : " + imageUri );
 
                             if (imageUri!=null) {
@@ -960,7 +955,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                             editorDoctor.putString("doctorstatus", signUpSelectDoctorStatusText);
                             editorDoctor.putInt("signupposition", signUpPosition);
                             editorDoctor.commit();
-
 
                             // Launch login activity
                             Intent intent = new Intent(SignUp.this, PinVerification.class);
@@ -1005,7 +999,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                             finish();
 
                         }
-
 
 
                         if (signUpPosition == 6) {
@@ -1174,9 +1167,7 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
                     params.put("bloodgroup", bloodgroupId);
                     params.put("social_id", mUserSocialId);
 
-
                 }
-
 
                 return params;
             }
@@ -1376,7 +1367,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1390,7 +1380,6 @@ public class SignUp extends AppCompatActivity implements  SearchView.OnQueryText
             onCaptureImageResult(data);
 
     }
-
 
     //selecting image from galary
     private void onSelectFromGalleryResult(Intent data) {

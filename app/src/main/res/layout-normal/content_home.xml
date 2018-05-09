@@ -51,10 +51,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3.5"
+            android:layout_weight="1.6"
             android:orientation="horizontal"
-            android:id="@+id/askQuesMedicalRecordLayout"
-            android:paddingBottom="10dp">
+            android:id="@+id/askQuesMedicalRecordLayout">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -82,7 +81,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="0.2">
 
 
 
@@ -108,22 +107,24 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/bloodbtn"
-                            android:layout_weight="1.1"
-                            android:layout_marginBottom="-5dp"
+                            android:layout_weight="1"
                             android:scaleType="fitXY"
-                            android:layout_toLeftOf="@+id/blogBtn" />
+                            android:scaleX="1.1"
+                            android:paddingLeft="6dp"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="6dp"
+                            android:scaleY="1.1345"
+                            />
 
                         <ImageView
                             android:id="@+id/blogBtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.35"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"
+                            android:layout_weight="1.1"
                             android:scaleType="fitXY"
-                            android:paddingBottom="28dp"
                             android:paddingLeft="-8dp"
                             android:paddingRight="-8dp"
+                            android:paddingBottom="33dp"
                             android:src="@drawable/blogbtn"
                             />
 
@@ -133,12 +134,65 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="fitXY"
-                            android:layout_weight="1.1"
-                            android:layout_marginBottom="-5dp"
-                            android:src="@drawable/discountbtn"
-                            android:layout_toRightOf="@id/blogBtn"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true" />
+                            android:scaleY="1.1345"
+                            android:layout_weight="1"
+                            android:scaleX="1.1"
+                            android:paddingRight="5dp"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="4dp"
+                            android:src="@drawable/discountbtn" />
+
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:adjustViewBounds="true"
+                        android:layout_weight="1"
+                        android:layout_marginTop="-42dp"
+                        android:layout_marginBottom="-42dp">
+
+
+                        <ImageView
+                            android:id="@+id/videoAudioCallBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.4"
+                            android:paddingRight="-8dp"
+                            android:scaleType="fitXY"
+                            android:paddingTop="34dp"
+                            android:paddingBottom="28dp"
+                            android:src="@drawable/videoaudiocallbtn" />
+
+
+                        <ImageView
+                            android:id="@+id/doctorBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/blogBtn"
+                            android:layout_marginBottom="4dp"
+                            android:layout_weight="0.9"
+                            android:paddingLeft="-8dp"
+                            android:paddingRight="-8dp"
+                            android:paddingTop="10dp"
+                            android:scaleType="fitXY"
+                            android:scaleY="1.2"
+                            android:scaleX="1"
+                            android:src="@drawable/doctorbtn" />
+
+                        <ImageView
+                            android:id="@+id/ambluanceBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.4"
+                            android:paddingLeft="-8dp"
+                            android:scaleType="fitXY"
+                            android:paddingTop="34dp"
+                            android:paddingBottom="28dp"
+                            android:src="@drawable/ambulancebtn" />
 
                     </LinearLayout>
 
@@ -147,100 +201,45 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_weight="0.9"
-                        android:layout_marginTop="-35dp"
-                        android:layout_marginBottom="-36dp">
-
-
-                        <ImageView
-                            android:id="@+id/videoAudioCallBtn"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="-10dp"
-                            android:layout_weight="1.5"
-                            android:src="@drawable/videoaudiocallbtn"
-                            android:layout_below="@+id/bloodBtn"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_marginTop="@dimen/mainScreenButtonMarginTopForNormal"
-                            android:layout_toLeftOf="@+id/doctorBtn"
-                            android:layout_above="@+id/pharmacybtn"
-                            android:paddingRight="@dimen/mainScreenButtonPaddingRightForNormal" />
-
-
-                        <ImageView
-                            android:id="@+id/doctorBtn"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.924"
-                            android:layout_below="@+id/blogBtn"
-                            android:layout_centerHorizontal="true"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/doctorbtn" />
-
-                        <ImageView
-                            android:id="@+id/ambluanceBtn"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1.5"
-                            android:layout_below="@+id/discountBtn"
-                            android:layout_marginLeft="-10dp"
-                            android:src="@drawable/ambulancebtn"
-                            android:layout_marginTop="@dimen/mainScreenButtonMarginTopForNormal"
-                            android:layout_toRightOf="@+id/doctorBtn"
-                            android:paddingLeft="@dimen/mainScreenButtonPaddingLeftNormal"
-                            android:layout_above="@+id/labsBtn"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="0.9">
+                        android:layout_marginTop="8dp">
 
 
                         <ImageView
                             android:id="@+id/pharmacybtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.1"
+                            android:layout_weight="1"
                             android:scaleType="fitXY"
-                            android:src="@drawable/pharmacybtn"
-                            android:layout_alignBottom="@+id/homecarebtn"
-                            android:layout_toLeftOf="@+id/homecarebtn"
-                            android:layout_marginTop="-6dp"
-                            android:layout_marginBottom="-6dp"/>
+                            android:scaleX="1.1"
+                            android:paddingLeft="6dp"
+
+                            android:scaleY="1.1345"
+                            android:src="@drawable/pharmacybtn" />
 
                         <ImageView
                             android:id="@+id/homecarebtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_below="@+id/doctorBtn"
-                            android:layout_centerHorizontal="true"
-                            android:layout_weight="1.35"
+                            android:layout_weight="1.1"
                             android:scaleType="fitXY"
-                            android:paddingTop="26dp"
                             android:paddingLeft="-8dp"
                             android:paddingRight="-8dp"
+                            android:paddingTop="27dp"
                             android:src="@drawable/homecarebtn"
-                            android:layout_marginBottom="-6dp"/>
+                            android:layout_marginBottom="-7dp"/>
 
 
                         <ImageView
                             android:id="@+id/labsBtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.1"
+                            android:layout_weight="1"
                             android:scaleType="fitXY"
-                            android:src="@drawable/labsbtn"
-                            android:layout_alignBottom="@+id/homecarebtn"
-                            android:layout_toRightOf="@+id/homecarebtn"
-                            android:paddingLeft="@dimen/mainScreenButtonPaddingLeftNormal"
-                            android:layout_marginTop="-6dp"
-                            android:layout_marginBottom="-6dp"/>
+                            android:scaleX="1.1"
+                            android:paddingRight="5dp"
+                            android:scaleY="1.1345"
+                            android:src="@drawable/labsbtn" />
 
                     </LinearLayout>
 
@@ -248,22 +247,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:layout_weight="1"
-                        android:layout_marginTop="0dp">
+                        android:layout_weight="1">
 
                         <ImageView
                             android:id="@+id/jobBtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1.3"
-                            android:paddingTop="0dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_below="@+id/pharmacybtn"
                             android:scaleType="fitXY"
-                            android:src="@drawable/jobbtn"
-                            android:layout_marginTop="@dimen/mainScreenButtonMarginTopForNormal"
-                            android:layout_toLeftOf="@+id/hospitalbtn"
-                            android:paddingRight="@dimen/mainScreenButtonPaddingRightForNormal"/>
+                            android:scaleY="1.1"
+                            android:paddingRight="-4dp"
+                            android:paddingBottom="4dp"
+                            android:src="@drawable/jobbtn" />
 
 
                         <ImageView
@@ -271,18 +266,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:paddingTop="0dp"
                             android:paddingLeft="-10dp"
                             android:paddingRight="-10dp"
-                            android:layout_below="@+id/homecarebtn"
-                            android:layout_centerHorizontal="true"
                             android:scaleType="fitXY"
-                            android:src="@drawable/hospitalbtn"
-                            android:layout_marginTop="@dimen/mainScreenButtonMarginTopForNormal"/>
-
-
-
-
+                            android:scaleY="1.1"
+                            android:paddingBottom="4dp"
+                            android:src="@drawable/hospitalbtn" />
 
 
 
@@ -291,15 +280,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1.3"
-                            android:paddingTop="0dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_below="@+id/labsBtn"
                             android:scaleType="fitXY"
-                            android:src="@drawable/medicinereminderbtn"
-                            android:layout_marginTop="@dimen/mainScreenButtonMarginTopForNormal"
-                            android:layout_toRightOf="@+id/hospitalbtn"
-                            android:paddingLeft="@dimen/mainScreenButtonPaddingLeftNormal"
-                            />
+                            android:scaleY="1.1"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="-4dp"
+                            android:src="@drawable/medicinereminderbtn" />
 
 
                     </LinearLayout>
@@ -383,5 +368,58 @@
 
     </LinearLayout>
 
+
+
+    <RelativeLayout
+        android:id="@+id/rl_frond"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/tab_colorTransparant"
+        android:visibility="gone">
+
+
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl_guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="10dp"
+        android:visibility="gone">
+
+        <!--  <ImageView
+              android:id="@+id/iv_crosee"
+              android:layout_width="30dp"
+              android:layout_height="30dp"
+              android:src="@drawable/cross_for_first_guide"
+              android:layout_alignParentTop="true"
+              android:layout_marginRight="100dp"
+              android:layout_alignParentRight="true"/>
+  -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Slid to Right or Tap on Above Option Icon to open menu for login or registration"
+            android:textColor="@color/whiteColor"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/arra"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

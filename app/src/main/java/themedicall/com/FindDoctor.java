@@ -1972,13 +1972,13 @@ public class FindDoctor extends NavigationDrawer implements SearchView.OnQueryTe
 
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         unregisterReceiver(myReceiver);
         super.onStop();
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
 
         myReceiver = new MyReceiverForNetworkDialog();
         IntentFilter intentFilter = new IntentFilter();

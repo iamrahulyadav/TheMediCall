@@ -69,15 +69,20 @@ public class SelectSignUpOptions extends AppCompatActivity {
         Intent intent = getIntent();
 
         String claimeeId = intent.getStringExtra("claimee_id");
-        Log.e("TAG", "then the claimeed is is here: " + claimeeId);
 
-        if (claimeeId!=null ||  !claimeeId.equals(null) || claimeeId.length()>0){
-            mClimeeName = getIntent().getStringExtra("claimee_name");
-            mFrome = getIntent().getStringExtra("from");
-            mClaimeeID = claimeeId;
+        if (claimeeId==null){
+
+            finish();
+        }else {
+            Log.e("TAG", "then the claimeed is is here: " + claimeeId);
+
+            if (claimeeId != null || !claimeeId.equals(null) || claimeeId.length() > 0) {
+                mClimeeName = getIntent().getStringExtra("claimee_name");
+                mFrome = getIntent().getStringExtra("from");
+                mClaimeeID = claimeeId;
+            }
+
         }
-
-
 
         singUpOptionList = new ArrayList<>();
         skipEnter = (TextView) findViewById(R.id.skipAndEnter);
@@ -99,7 +104,8 @@ public class SelectSignUpOptions extends AppCompatActivity {
         signupdoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SelectSignUpOptions.this , SignUp.class);
+                //Intent intent = new Intent(SelectSignUpOptions.this , SignUp.class);
+                Intent intent = new Intent(SelectSignUpOptions.this , MedicSignup.class);
                 intent.putExtra("item_position" , 0);
                 intent.putExtra("claimee_id", mClaimeeID);
                 intent.putExtra("claimee_name", mClimeeName);
@@ -160,8 +166,9 @@ public class SelectSignUpOptions extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SelectSignUpOptions.this , SignUpForAliedHealth.class);
-                //intent.putExtra("item_position" , 5);
+                intent.putExtra("item_position" , 5);
                 startActivity(intent);
+                finish();
                // comingSoonDialog();
             }
         });

@@ -83,6 +83,7 @@ import themedicall.com.Globel.Utility;
 import themedicall.com.Interfaces.AddingNewCategoryInterface;
 import themedicall.com.Interfaces.ClaimButtonInterface;
 import themedicall.com.Services.GetAllDoctorDetailService;
+import themedicall.com.Services.UploadProfileImageService;
 import themedicall.com.VolleyLibraryFiles.AppSingleton;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
@@ -906,17 +907,21 @@ public class BasicInfoUpdateDocProfile extends Fragment implements SearchView.On
 
                     jsonObject = new JSONObject(result);
                     jsonArray = jsonObject.getJSONArray("subspecs");
+                    Log.e("Shoaib", "the Total subspecs " + jsonArray.length());
                     subService = jsonObject.getJSONArray("services");
+                    Log.e("Shoaib", "the Total services " + subService.length());
                     subQualification = jsonObject.getJSONArray("qualifications");
+                    Log.e("Shoaib", "the Total qualifications " + subQualification.length());
                     institution = jsonObject.getJSONArray("institution");
+                    Log.e("Shoaib", "the Total institution " + institution.length());
                     registrations = jsonObject.getJSONArray("registrations");
+                    Log.e("Shoaib", "the Total registrations " + registrations.length());
 
-                    claimDoctersJsonArray = jsonObject.getJSONArray("doctors");
                     String totalClaimDoctors = jsonObject.getString("total_doctors");
                     Log.e("Shoaib", "the Total Doctors for claim " + totalClaimDoctors);
 
-
-
+                    claimDoctersJsonArray = jsonObject.getJSONArray("doctors");
+                    Log.e("Shoaib", "the Total Doctors for claim length " + claimDoctersJsonArray.length());
 
                     if (subSpecialistArrayList.size()>0){subSpecialistArrayList.clear();}
                     if(subServicesList.size()>0){subServicesList.clear();}
@@ -3945,8 +3950,15 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
 
     public void uploadingProfileImage(String imagePath, String drId){
 
+        Intent i = new Intent(getActivity(), UploadProfileImageService.class);
+        i.putExtra("imagePath", imagePath);
+        i.putExtra("drId", drId);
+        getActivity().startService(i);
 
-        //Uploading code
+
+
+
+        /*//Uploading code
         try {
             String uploadId = UUID.randomUUID().toString();
 
@@ -3995,6 +4007,13 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
                                         editor.putString("profile_img", image_url);
                                         editor.commit();
 
+                                        *//*Intent intent = new Intent();
+                                        intent.setAction("imageLoaded");
+                                        intent.putExtra("loaded", 1);//sending notification that data received in service
+                                        getActivity().sendBroadcast(intent);
+*//*
+                                        //sending boradcast for image upload complete
+
                                     } else {
 
                                         String errorMsg = jObj.getString("error_message");
@@ -4019,8 +4038,8 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
 
         } catch (Exception exc) {
             Toast.makeText(getActivity(), exc.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
+        }*/
+    }//end of multipart Service
 
 
 
@@ -4685,7 +4704,7 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
 
         rv_custom_dialog_layout.setAdapter(claimDoctorProfileAdapter);
 
-        if (isNewSpeciality) {
+        //if (isNewSpeciality) {
             if (adList.size()>0) {
 
              /*  Window dialogWindow = dialog.getWindow();
@@ -4699,7 +4718,7 @@ BioUpdateDoctorProfile.bioExpertise.setText("");
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
             }
-        }
+       // }
     }
 
     private void cliamProfileSendingDataService(final String myid, final String climId){

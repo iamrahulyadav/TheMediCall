@@ -56,5 +56,4 @@ public class AllPharmacyFragment extends Fragment {
         allPharmacyList = new ArrayList<>();
     }
 
-
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.medicall.ranglerz.com.medicall.UpdateDoctorProfile"
+    tools:context=".UpdateDoctorProfile"
     tools:showIn="@layout/activity_update_doctor_profile"
     android:background="@drawable/background">
 

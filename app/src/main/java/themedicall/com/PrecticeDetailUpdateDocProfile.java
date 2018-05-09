@@ -51,6 +51,7 @@ import themedicall.com.GetterSetter.HospitalSearchFilterGetterSetter;
 import themedicall.com.Globel.Glob;
 
 import themedicall.com.Services.GetAllDoctorDetailService;
+import themedicall.com.Services.UploadProfileImageService;
 import themedicall.com.VolleyLibraryFiles.AppSingleton;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
@@ -490,15 +491,11 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
                         ViewGroup parent = (ViewGroup) child.getParent();
                         parent.removeView(child);
 
-
-
                         parent.invalidate();
                         medicineCustomRow.invalidate();
                         medicineCustomRow.postInvalidate();
                         btAdmore.postInvalidate();
                         btAdmore.invalidate();
-
-
 
                     }
 
@@ -1437,7 +1434,12 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
     public void uploadingProfileImage(String imagePath, String drId){
 
 
-        //Uploading code
+        Intent i = new Intent(getActivity(), UploadProfileImageService.class);
+        i.putExtra("imagePath", imagePath);
+        i.putExtra("drId", drId);
+        getActivity().startService(i);
+
+        /*//Uploading code
         try {
             String uploadId = UUID.randomUUID().toString();
 
@@ -1509,8 +1511,8 @@ public class PrecticeDetailUpdateDocProfile extends Fragment {
 
         } catch (Exception exc) {
             Toast.makeText(getActivity(), exc.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
+        }*/
+    }//end of upload photo
 
 
     private void showDialog() {

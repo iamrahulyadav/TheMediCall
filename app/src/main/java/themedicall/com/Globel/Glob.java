@@ -106,5 +106,4 @@ public class Glob {
     public static final String ALLIED_HEALTH_SIGNUP = URL+"register-allied-health-professional";
 
 
-
 }

@@ -18,6 +18,7 @@
     <color name="buttonTextColor">#ffffff</color>
     <color name="customRowTextColor">#000000</color>
     <color name="tab_color">#d7393b</color>
+    <color name="tab_colorTransparant">#d667393b</color>
     <color name="backgroundTranspearent">#8dfde5e5</color>
     <color name="addressColor">#504e4e</color>
     <color name="practiceBackground">#03a18a</color>
@@ -37,6 +38,8 @@
     <color name="bg_screen4">#c873f4</color>
     <color name="bg_screen5">#306833</color>
     <color name="bg_screen6">#a7fae5</color>
+
+    <color name="login_segments_bacground">#85edebe7</color>
 
     <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#d1395c</color>

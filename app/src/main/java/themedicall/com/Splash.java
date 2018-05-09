@@ -121,6 +121,7 @@ public class Splash extends AppCompatActivity {
                 //Intent i = new Intent(Splash.this, MapActivityForSelectingHospital.class);
                // Intent i = new Intent(Splash.this, Home.class);
                 Intent i = new Intent(Splash.this, AppIntoTutorial.class);
+                //Intent i = new Intent(Splash.this, MedicSignup.class);
                 startActivity(i);
                 finish();
 
@@ -339,7 +340,6 @@ public class Splash extends AppCompatActivity {
         int dbCount = databaseHelper.getCount();
         if (dbCount>1){
 
-            super.onBackPressed();
         }
         else {
 

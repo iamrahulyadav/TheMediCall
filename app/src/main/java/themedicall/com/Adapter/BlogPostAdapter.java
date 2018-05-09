@@ -49,7 +49,6 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostAdapter.MyView
             iv_post = (ImageView) view.findViewById(R.id.iv_post);
 
 
-
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -132,6 +131,7 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostAdapter.MyView
     public int getItemCount() {
         return blogPostList.size();
     }
+
 
     @Override
     public int getItemViewType(int position) {

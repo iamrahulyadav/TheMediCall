@@ -88,8 +88,6 @@
             </LinearLayout>
 
 
-
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edittext_height"
@@ -100,7 +98,8 @@
                 android:background="@drawable/edittext_bottom_line"
                 android:textColorHint="@color/hintColor"
                 android:textSize="@dimen/hintSize"
-                android:layout_marginTop="@dimen/edit_text_margin_top_in_minus" />
+                android:layout_marginTop="@dimen/edit_text_margin_top_in_minus"
+                android:visibility="gone"/>
 
 
 
@@ -297,7 +296,7 @@
                 android:layout_height="@dimen/edittext_height"
                 android:layout_marginTop="@dimen/edit_text_margin_top_in_minus"
                 android:background="@drawable/edittext_bottom_line"
-                android:hint="Consul Registration #"
+                android:hint="Counsel Registration #"
                 android:inputType="text"
                 android:textColorHint="@color/hintColor"
                 android:textSize="@dimen/hintSize"

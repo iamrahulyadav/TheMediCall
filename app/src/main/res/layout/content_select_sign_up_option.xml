@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.medicall.ranglerz.com.medicall.SelectSignUpOptions"
+    tools:context=".SelectSignUpOptions"
     tools:showIn="@layout/activity_select_sign_up_option"
     android:orientation="vertical"
     android:background="@color/landingScreenBackgroundColor"
@@ -27,8 +27,6 @@
             android:layout_marginTop="0dp"/>
 
     </LinearLayout>
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,8 +50,6 @@
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:id="@+id/signuphealthprofessional"/>
-
-
 
 
     </LinearLayout>
@@ -89,8 +85,6 @@
     </LinearLayout>
 
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -113,13 +107,8 @@
             android:layout_marginLeft="10dp"
             android:id="@+id/signuplab"/>
 
-
-
         //////////////////////////////////////////////////////
     </LinearLayout>
-
-
-
 
 
     <LinearLayout

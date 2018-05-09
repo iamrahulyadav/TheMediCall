@@ -43,17 +43,34 @@
 
 
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edittext_height"
+                android:background="@drawable/edittext_bottom_line"
+                android:layout_marginTop="@dimen/edit_text_margin_top_in_minus">
+
+                <TextView
+                    android:id="@+id/tv_dr_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dr. "
+                    android:textColor="@color/hintColor"
+                    android:layout_centerVertical="true"/>
+
             <EditText
+                android:layout_toRightOf="@id/tv_dr_tag"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edittext_height"
                 android:hint="Full Name"
                 android:id="@+id/signUpName"
                 android:inputType="text"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-                android:background="@drawable/edittext_bottom_line"
+                android:background="@null"
                 android:textColorHint="@color/hintColor"
                 android:textSize="@dimen/hintSize"
-                android:layout_marginTop="@dimen/edit_text_margin_top_in_minus" />
+                />
+
+            </RelativeLayout>
 
 
             <LinearLayout
@@ -101,7 +118,8 @@
                 android:background="@drawable/edittext_bottom_line"
                 android:textColorHint="@color/hintColor"
                 android:textSize="@dimen/hintSize"
-                android:layout_marginTop="@dimen/edit_text_margin_top_in_minus" />
+                android:layout_marginTop="@dimen/edit_text_margin_top_in_minus"
+                android:visibility="gone"/>
 
 
 
@@ -214,7 +232,6 @@
                 android:id="@+id/signUpSelectDesignationLayout"
                 android:background="@drawable/edittext_bottom_line"
                 android:layout_marginTop="@dimen/edit_text_margin_top_in_minus"
-
                 >
 
                 <Spinner
@@ -304,7 +321,7 @@
                 android:inputType="text"
                 android:textColorHint="@color/hintColor"
                 android:textSize="@dimen/hintSize"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
 
 
@@ -315,7 +332,7 @@
                 android:background="@drawable/order_medicine_dotted_line"
                 android:id="@+id/ll_pmdc_photo"
                 android:layout_marginTop="10dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"

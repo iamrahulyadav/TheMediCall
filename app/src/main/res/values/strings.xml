@@ -189,5 +189,7 @@
         <item>Optometrist</item>
         <item>Fitness Trainer</item>
     </string-array>
+    <string name="title_activity_update_alied_helath_profile">UpdateAliedHelathProfile</string>
+    <string name="title_activity_medic_signup">MedicSignup</string>
 
 </resources>

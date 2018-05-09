@@ -1,8 +1,10 @@
 package themedicall.com;
 import android.Manifest;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -29,6 +31,7 @@ import com.squareup.picasso.Picasso;
 import themedicall.com.Globel.CircleTransformPicasso;
 import themedicall.com.Globel.Glob;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +45,9 @@ public class NavigationDrawer extends AppCompatActivity
     MenuItem createAccount;
     ImageView imageView;
     Menu menu;
+
+    MyReceiverForImageUploaded myReceiverForImageUploaded;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,6 +201,11 @@ public class NavigationDrawer extends AppCompatActivity
 
                           /*  Intent intent = new Intent(NavigationDrawer.this, UpdateDoctorProfile.class);
                             startActivity(intent);*/
+
+                        }
+                        if (userTable.equals("allied_healths")){
+                            Intent intent = new Intent(NavigationDrawer.this, UpdateAliedHelathProfile.class);
+                            startActivity(intent);
 
                         }
                         if (userTable.equals(getResources().getString(R.string.others))) {
@@ -519,5 +530,47 @@ public class NavigationDrawer extends AppCompatActivity
         }
     }
 
+    public class MyReceiverForImageUploaded extends BroadcastReceiver {
 
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+
+            int datapassed = arg1.getIntExtra("loaded", 0);
+
+            if (datapassed == 1) {
+
+                SharedPreferences sharedPreferences = getSharedPreferences("usercrad", 0);
+                String profileImage = sharedPreferences.getString("profile_img", "");
+                Log.e("TAG", "Image Url is uploaded from ur is: " + profileImage);
+
+               String  PROFILE_IMAGE_URL = Glob.IMAGE_BACK_URL + profileImage;
+                Picasso.with(getApplicationContext()).load(PROFILE_IMAGE_URL).transform(new CircleTransformPicasso()).into(imageView);
+                //image uploaded completed
+
+
+            }
+
+
+        }
+    }
+
+    @Override
+    public void onStart() {
+
+        //Register BroadcastReceiver
+        //to receive event from our service
+        myReceiverForImageUploaded = new MyReceiverForImageUploaded();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("imageLoaded");
+       registerReceiver(myReceiverForImageUploaded, intentFilter);
+
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+       unregisterReceiver(myReceiverForImageUploaded);
+        super.onStop();
+    }
 }

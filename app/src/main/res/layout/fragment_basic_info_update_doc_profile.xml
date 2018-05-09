@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="themedicall.com.BasicInfoUpdateDocProfile"
     android:paddingTop="@dimen/Layout_paddingTop"
     android:paddingRight="@dimen/Layout_paddingRight"
     android:paddingLeft="@dimen/Layout_paddingLeft"

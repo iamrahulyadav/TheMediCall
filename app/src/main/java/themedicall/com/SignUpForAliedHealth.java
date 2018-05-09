@@ -99,6 +99,9 @@ public class SignUpForAliedHealth extends AppCompatActivity implements  SearchVi
     Uri imageUri = null;
     Bitmap bitmap1;
 
+
+    int signUpPosition;
+
     private String  userChoosenTask;
 
     String[] city;
@@ -189,8 +192,14 @@ public class SignUpForAliedHealth extends AppCompatActivity implements  SearchVi
 
 
     }
+
     public void initiate()
     {
+
+
+        signUpPosition = getIntent().getIntExtra("item_position",-1);
+
+
 
 
         dialog=new CustomProgressDialog(SignUpForAliedHealth.this, 1);
@@ -329,9 +338,13 @@ public class SignUpForAliedHealth extends AppCompatActivity implements  SearchVi
         signUpDob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(SignUpForAliedHealth.this,R.style.CustomDatePickerDialogTheme,  date, myCalendar
+                DatePickerDialog datePickerDialog =    new DatePickerDialog(SignUpForAliedHealth.this,R.style.CustomDatePickerDialogTheme,  date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis()-1000-1);
+
+                datePickerDialog.show();
             }
 
 
@@ -673,6 +686,17 @@ public class SignUpForAliedHealth extends AppCompatActivity implements  SearchVi
                             finish();*/
 
 
+                        // Launch login activity
+                        Intent intent = new Intent(SignUpForAliedHealth.this, PinVerification.class);
+                        intent.putExtra("user_id", userID);
+                        intent.putExtra("code", CODE);
+                        intent.putExtra("signupposition", signUpPosition);
+                        startActivity(intent);
+                        finish();
+
+
+
+
            }
                     else {
 
@@ -978,11 +1002,15 @@ public class SignUpForAliedHealth extends AppCompatActivity implements  SearchVi
 
         Log.e("TAg", "The Request code is: " + requestCode);
 
-        //  if (resultCode == Activity.RESULT_OK) {
-        if (requestCode == SELECT_FILE)
-            onSelectFromGalleryResult(data);
-        else if (requestCode == REQUEST_CAMERA)
-            onCaptureImageResult(data);
+        if (data!=null) {
+
+            //  if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+
+        }
 
     }
 
@@ -1009,6 +1037,7 @@ public class SignUpForAliedHealth extends AppCompatActivity implements  SearchVi
     private void onCaptureImageResult(Intent data) {
 
         try {
+
 
             bitmap1 = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
             pmdcImageFrameLayout.setVisibility(View.VISIBLE);
@@ -1126,6 +1155,7 @@ public class SignUpForAliedHealth extends AppCompatActivity implements  SearchVi
             {
 
             }
+
         });//end for login editText
 
     }

@@ -51,7 +51,7 @@
             android:label="@string/title_activity_doctor_sign_in"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
@@ -61,7 +61,6 @@
             android:name=".SignUp"
             android:label="@string/title_activity_doctor_sign_up"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ForgetPassword"
@@ -387,6 +386,20 @@
         <activity
             android:name=".SignUpForAliedHealth"
             android:label="@string/title_activity_sign_up_for_alied_health"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".Services.UploadProfileImageService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".UpdateAliedHelathProfile"
+            android:label="@string/title_activity_update_alied_helath_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MedicSignup"
+            android:label="@string/title_activity_medic_signup"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
